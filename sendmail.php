@@ -1,6 +1,9 @@
 <?php require 'PHPMailer/PHPMailerAutoload.php'; ?>
 <?php
+
 function sendMail($dataemail, $email_type){
+    include('mailbody.php');
+    // $style = '<style>td, th {border: 1px solid black; padding: 4px;}</style>';
     $mail = new PHPMailer;
     $mail->isSMTP();
     $mail->CharSet="UTF-8"; 
@@ -33,12 +36,9 @@ function sendMail($dataemail, $email_type){
         //$mail->msgHTML(file_get_contents('mailbody_contact.php'), dirname(__FILE__));
     }else if($email_type == 301){
         $mail->Subject = 'SogoKorat รายการ Order';
+        $mail->AddEmbeddedImage('images/logo.jpg', 'logo');
         $mail->addAddress($dataemail->mail_user, 'คุณลูกค้า: ' . $dataemail->name_user);
-        $mail->msgHTML('<p>ชื่อ: ' . $dataemail->name_user . '</p>' . 
-                    '<p>อีเมล์: '. $dataemail->mail_user . '</p>' .
-                    '<p>เบอร์โทรศัพท์: ' . $dataemail->tel_user . '</p>' . 
-                    '<p>ที่อยู่ในการจัดส่ง<br/> ' . $dataemail->address_user . '</p>'.                   
-                    '<p>รายละเอียดการสั่งซื้อ<br/> ' . $dataemail->order_info . '</p>');
+        $mail->msgHTML(getOrderHtml($dataemail));
     }
     //$mail->addAttachment('grizzly-bear2.jpg'); File path
     if (!$mail->send()) {

@@ -14,12 +14,13 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="index.php">˹���á</a></li>
-            <li><a href="about.php">����ǡѺ���</a></li>
-            <li><a href="product.php">Ẻ��ҹ</a></li>
-            <li><a href="project.php">�ç���</a></li>
-            <li><a href="gallery.php?Type=1">��ź���ٻ�Ҿ</a></li>
-            <li><a href="contact.php"><i class="fa fa-pencil-square-o f-16"></i> �Դ������</a></li>
+            <li><a href="index.php">หน้าแรก</a></li>
+            <li><a href="about.php">เกี่ยวกับเรา</a></li>
+            <li><a href="product.php">สินค้า</a></li>
+            <li><a href="project.php">ข่าวสารและกิจกรรม</a></li>
+            <li><a href="gallery.php?Type=1">ขั้นตอนการสั่งซื้อ</a></li>
+            <li><a href="contact.php"><i class="fa fa-pencil-square-o f-16"></i>ชำระเงิน</a></li>
+            <li><a href="cart.php">ตะกร้าสินค้า</a></li>
           </ul>
         </div><!-- /.navbar-collapse -->
                             </div>

@@ -44,7 +44,6 @@ body {
     include('connect.php');
     // $add_id = isset($_GET['add_product']) ? $_GET['add_product']:0;
     // $amount = isset($_GET['amount']) ? $_GET['amount']:0;
-
     if (isset($_POST['id'])) {
         // echo '<script>console.log(JSON.parse(JSON.stringify('.json_encode($_POST).')));</script>';
         ?>
@@ -56,11 +55,13 @@ body {
         <?php
     }
 
-    if(isset($_GET['remove'])){
-        $remove_index = $_GET['index'];
+    if(isset($_POST['remove_index'])){
+        
+        $remove_index = $_POST['remove_index'];
         unset($_SESSION['cart'][$remove_index]);
+        echo '<script>console.log("remove id: '.$remove_index.'");</script>';
         // array_splice($_SESSION['cart'], $remove_index, 1);
-        echo '<script>window.location = window.location.href.split("?")[0];</script>';
+        // echo '<script>window.location = window.location.href.split("?")[0];</script>';
     }
     
     if (isset($_POST['amount']) && isset($_POST['id'])){
@@ -71,12 +72,16 @@ body {
         $p = new stdClass();
         $p->id = $_POST['id'];
         $p->amount = $_POST['amount'];
-        $p->remark = $_POST['remark'];
-        $p->school_logo = $_POST['school_logo'];
-        $p->size = $_POST['size'];
-        $p->star = $_POST['star'];
-        $p->student_id = $_POST['student_id'];
-        $p->student_info = $_POST['student_info'];
+        $p->school_logo = isset($_POST['school_logo']) ? $_POST['school_logo']:'';
+        $p->size = isset($_POST['size']) ? $_POST['size']:'';
+        $p->star = isset($_POST['star']) ? $_POST['star']:'';
+        $p->color = isset($_POST['color']) ? $_POST['color']:'';
+        $p->waist = isset($_POST['waist']) ? $_POST['waist']:'';
+        $p->waist_long = isset($_POST['waist_long']) ? $_POST['waist_long']:'';
+        $p->student_info = isset($_POST['student_info']) ? $_POST['student_info']:'';
+
+        $p->student_id_or_name = isset($_POST['student_id_or_name']) ? $_POST['student_id_or_name']:'';
+        $p->remark = isset($_POST['remark']) ? $_POST['remark']:'';
 
         if(!isset($_SESSION['cart'])) {
             $_SESSION['cart'] = array();
@@ -95,13 +100,16 @@ body {
         // echo '<script>window.location = window.location.href.split("?")[0];</script>';
     }
 
-    if(isset($_POST['order_now'])){
-        $address_user = $_POST['user_address'];
-        $name_user = $_POST['user_name'];
-        $mail_user = $_POST['user_email'];
-        $tel_user = $_POST['user_tel'];
+    if(isset($_POST['order_now']) && count((array) $_SESSION['cart']) > 0){
+        $address_user = trim($_POST['user_address']);
+        $name_user =  trim($_POST['user_name']);
+        $mail_user =  trim($_POST['user_email']);
+        $tel_user =  trim($_POST['user_tel']);
         $order_id = substr(time(),0,6);
-        $order_info=('รหัสสั่งซื้อ: '.$order_id.'<br/>รายการที่สั่งซื้อ...<br/>');
+        $order_info=('รหัสสั่งซื้อ: '.$order_id.'<br/><br/>รายการที่สั่งซื้อ...<br/>'.
+        '<table cellpadding="0" cellspacing="0"><thead><tr><th>สินค้า</th><th>ราคาต่อชิ้น</th><th>จำนวน</th><th>ราคา</th>'.
+        '<th>ปักสัญลักษณ์โรงเรียน</th><th>ขนาด</th><th>ปักดาวหรือจุด</th><th>ปักชื่อหรือเลขประจำตัว</th><th>ชื่อหรือเลขประจำตัว</th><th>สี</th><th>เอว</th><th>เอวxยาว</th><th>หมายเหตุ</th>'.
+        '</tr></thead><tbody>');
 
         // make it start at 0
         $cart = array_values((array) $_SESSION['cart']);
@@ -114,10 +122,20 @@ body {
                 $productp = $res_pp;
             }
             $sum = $sum + ( ($cart[$ix]->amount)*($productp['price']) );
-            $order_info .= ($productp['title'].' ราคาต่อชิ้น '.$productp['price'].' จำนวน '.($cart[$ix]->amount).' ชิ้น<br/>');
+            $order_info .= '<tr><td>'.$productp['title'].'</td><td>'.$productp['price'].'</td><td>'.($cart[$ix]->amount).'</td><td>'.($productp['price'] * $cart[$ix]->amount).'</td>'.
+            '<td>'.($cart[$ix]->school_logo).'</td>'.
+            '<td>'.($cart[$ix]->size).'</td>'.
+            '<td>'.($cart[$ix]->star).'</td>'.
+            '<td>'.($cart[$ix]->student_id_or_name).'</td>'.
+            '<td>'.($cart[$ix]->student_info).'</td>'.
+            '<td>'.($cart[$ix]->color).'</td>'.
+            '<td>'.($cart[$ix]->waist).'</td>'.
+            '<td>'.($cart[$ix]->waist_long).'</td>'.
+            '<td>'.($cart[$ix]->remark).'</td>'.
+            '</tr>';
             $ix++;
         }
-        $order_info .= ' รวมทั้งหมด '.$sum. ' บาท';
+        $order_info .= '<tr><td colspan="10" style="text-align: right">รวมทั้งสิ้น '.$sum.' บาท</td></tr></tbody></table>';
         $res = $conn->query("INSERT INTO orders(`address_user`,`name_user`,`order_info`,`sum`,`tel_user`,`email_user`) VALUES('$address_user','$name_user', '$order_info','$sum','$tel_user','$mail_user')");
         if($res){ 
             
@@ -149,7 +167,7 @@ body {
             echo '<td width="120px">ราคาต่อชิ้น</td>';
             echo '<td width="120px">ราคารวม</td>';
             echo '<td width="30px"></td></tr></thead>';
-            echo '<tbody>';
+            echo '<tbody style="font-weight: 700;">';
             // make it start at 0
             $cart = array_values((array) $_SESSION['cart']);
             $i=0;
@@ -164,17 +182,33 @@ body {
                 $amount_i = $cart[$i]->amount;
                 $sum = $sum + (($product['price']) *$amount_i);
                 echo '<tr>';
-                echo '<td>'.$product['title'].'</td>';
+                echo '<td>'.$product['title'].'<br />';
+
+                echo '<table class="table table-bordered table-striped">';
+                echo '<tbody style="font-size: 18px; color: #555; font-weight: 400;"><tr>';
+                echo '<tr>';
+                if(strlen($cart[$i]->school_logo) > 0) echo '<td>ปักสัญลักษณ์โรงเรียน'.($cart[$i]->school_logo).'</td>';
+                if(strlen($cart[$i]->size) > 0) echo '<td>ขนาด: '.($cart[$i]->size).'</td>';
+                if(strlen($cart[$i]->star) > 0) echo '<td>ปักดาวหรือจุด: '.($cart[$i]->star).'</td>';
+                if(strlen($cart[$i]->student_id_or_name) > 0) echo '<td>ปักชื่อหรือเลขประจำตัว: '.($cart[$i]->student_id_or_name).'</td>';
+                if(strlen($cart[$i]->student_info) > 0) echo '<td>ชื่อหรือเลขประจำตัว: '.($cart[$i]->student_info).'</td>';
+                if(strlen($cart[$i]->color) > 0) echo '<td>สี: '.($cart[$i]->color).'</td>';
+                if(strlen($cart[$i]->waist) > 0) echo '<td>เอว: '.($cart[$i]->waist).'</td>';
+                if(strlen($cart[$i]->waist_long) > 0) echo '<td>เอวxยาว: '.($cart[$i]->waist_long).'</td>';
+                if(strlen($cart[$i]->remark) > 0) echo '<td>หมายเหตุ: '.($cart[$i]->remark).'</td>';
+                echo '</tr></tbody></table>';
+
+                echo '</td>';
                 echo '<td>'.$cart[$i]->amount.'</td>';
                 echo '<td>'.(($product['price'])).'</td>';
                 echo '<td>'.(($product['price'])*$amount_i).'</td>';
-                echo '<td><form method="get" action="cart.php">';
-                echo '<input type="hidden" name="index" value="'.$cart[$i]->id.'" />';
-                echo '<input type="hidden" name="add_product" value="" />';
-                echo '<input type="hidden" name="amount" value="" />';
+                
+                echo '<td><form method="POST" action="cart.php">';
+                echo '<input type="hidden" name="remove_index" value="'.$cart[$i]->id.'" />';
                 echo '<input type="submit" name="remove" class="btn btn-danger" value="ลบ" />';
                 echo '</form></td>';
                 echo '</tr>';
+
                 $i++;
             }
             echo '<tr><td></td><td></td><td></td><td>'.$sum.'</td><td></td></tr>';
