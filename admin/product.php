@@ -94,7 +94,7 @@
       // if no id -> create product
       else{
         $conn->query("INSERT INTO `product`(`id`, `title`, `detail_short`, `detail`, `price`, `category`, `src_thumb`, `size`, `school_logo`, `student_info`, `star`, `waist`, `waist_long`, `color`) ".
-        "VALUES (NULL,'$title_','$detail_short_','$detail_','$price_','$category_','$target_file'".
+        "VALUES (NULL,'$title_','$detail_short_','$detail_','$price_','$category_','$target_file',".
         "$size_, $school_logo_, $student_info_, $star_, $waist_, $waist_long_, $color_".
         ")");
         echo '<script type="text/javascript">
@@ -118,7 +118,7 @@
       // if no id -> create product
       else{
         $conn->query("INSERT INTO `product`(`id`, `title`, `detail_short`, `detail`, `price`, `category`, `size`, `school_logo`, `student_info`, `star`, `waist`, `waist_long`, `color`) ".
-        "VALUES (NULL,'$title_','$detail_short_','$detail_','$price_','$category_'".
+        "VALUES (NULL,'$title_','$detail_short_','$detail_','$price_','$category_',".
         "$size_, $school_logo_, $student_info_, $star_, $waist_, $waist_long_, $color_".
         ")");
         echo '<script type="text/javascript">
