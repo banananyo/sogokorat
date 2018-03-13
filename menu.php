@@ -23,7 +23,7 @@
             <li><a href="howto.php">ขั้นตอนการสั่งซื้อ</a></li>
             <li><a href="payment.php">ชำระเงิน</a></li>
             <li><a href="contact.php">ติดต่อเรา</a></li>
-            <?php if(isset($_SESSION['cart']) && count($_SESSION['cart']) > 0 ) echo '<li><a href="cart.php">ตะกร้าสินค้า</a></li>'; ?>
+            <li><a href="cart.php">ตะกร้าสินค้า</a></li>
           </ul>
         </div><!-- /.navbar-collapse -->
                             </div>

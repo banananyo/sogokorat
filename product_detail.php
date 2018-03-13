@@ -54,54 +54,110 @@ body {
 	<?php 
 	if(isset($product)){ ?>
 		<img src="<?php echo str_replace('../images','images',$product['src_thumb']); ?>" style="max-height: 360px; width: auto" />
-		<div style="color: rgb(150,150,180); font-size: 35px">ราคา: <?php echo $product['price']; ?> ฿</div>
-		<?php echo str_replace('../images','images',$product['detail']); ?>
+		<div style="color: rgb(150,150,180); font-size: 35px">ราคา: <?php echo $product['price']; ?> บาท</div>
+		<div style="display: flex; justify-content: center; flex-direction: column; align-items: center;"><?php echo str_replace('../images','images',$product['detail']); ?></div>
 		<form method="post" action="cart.php" class="form" id="form_order" onsubmit="return formcheck();">
 			<input type="hidden" id="id" name="id" value="<?php echo $product['id']; ?>" />
 			
 			<?php
 			$label_column = 'col-xs-12 col-sm-12 col-md-offset-4 col-md-4 text-center';
 			$input_column = 'col-xs-12 col-sm-offset-2 col-sm-8 col-lg-offset-4 col-lg-4';
+			function generateChoice($arrayString) {
+				$array = explode(',', $arrayString); 
+				$i=0;
+				while($i < count($array)) { 
+					echo '<option value="'.$array[$i].'">'.$array[$i].'</option>';
+					$i++;
+				}
+			}
 			?>
 			<!-- new section -->
-			<div class="form-group row">
-				<label for="size" class="<?php echo $label_column; ?>">ขนาด</label>
-				<div class="<?php echo $input_column; ?>">
-					<select name="size" id="size" class="form-control">
-						<option value="32">32</option>
-					</select>
+			<?php if ($product['size'] != null) { ?>
+				<div class="form-group row">
+					<label for="size" class="<?php echo $label_column; ?>">ขนาด</label>
+					<div class="<?php echo $input_column; ?>">
+						<select name="size" id="size" class="form-control">
+							<?php generateChoice($product['size']); ?>
+						</select>
+					</div>
 				</div>
-			</div>
-			<div class="form-group row">
-				<label for="school_logo" class="<?php echo $label_column; ?>">ปักสัญลักษณ์โรงเรียน (ฟรี)</label>
-				<div class="<?php echo $input_column; ?>">
-					<select name="school_logo" id="school_logo" class="form-control">
-						<option value="32">32</option>
-					</select>
+			<?php } ?>
+
+			<?php if ($product['school_logo'] != null) { ?>
+				<div class="form-group row">
+					<label for="school_logo" class="<?php echo $label_column; ?>">ปักสัญลักษณ์โรงเรียน (ฟรี)</label>
+					<div class="<?php echo $input_column; ?>">
+						<select name="school_logo" id="school_logo" class="form-control">
+							<?php generateChoice($product['school_logo']); ?>
+						</select>
+					</div>
 				</div>
+			<?php } ?>
+
+			<?php if ($product['student_info'] != null) { ?>
+				<div class="form-group row">
+					<label for="student_info" class="<?php echo $label_column; ?>">ปักชื่อหรือเลขประจำตัว</label>
+					<div class="<?php echo $input_column; ?>">
+						<select name="student_info" id="student_info" class="form-control">
+							<?php generateChoice($product['student_info']); ?>
+						</select>
+					</div>
 				</div>
-			<div class="form-group row">
-				<label for="student_info" class="<?php echo $label_column; ?>">ปักชื่อหรือเลขประจำตัว</label>
-				<div class="<?php echo $input_column; ?>">
-					<select name="student_info" id="student_info" class="form-control">
-						<option value="32">32</option>
-					</select>
+			<?php } ?>
+
+			<?php if ($product['star'] != null) { ?>
+				<div class="form-group row">
+					<label for="star" class="<?php echo $label_column; ?>">ปักดาวหรือจุด</label>
+					<div class="<?php echo $input_column; ?>">
+						<select name="star" id="star" class="form-control">
+							<?php generateChoice($product['star']); ?>
+						</select>
+					</div>
 				</div>
-			</div>
-			<div class="form-group row">
-				<label for="star" class="<?php echo $label_column; ?>">ปักดาวหรือจุด</label>
-				<div class="<?php echo $input_column; ?>">
-					<select name="star" id="star" class="form-control">
-						<option value="32">32</option>
-					</select>
+			<?php } ?>
+
+			<?php if ($product['color'] != null) { ?>
+				<div class="form-group row">
+					<label for="color" class="<?php echo $label_column; ?>">สี</label>
+					<div class="<?php echo $input_column; ?>">
+						<select name="color" id="color" class="form-control">
+							<?php generateChoice($product['color']); ?>
+						</select>
+					</div>
 				</div>
-			</div>
-			<div class="form-group row">
-				<label for="student_id" class="<?php echo $label_column; ?>">กรอกชื่อหรือเลขประจำตัว</label>
-				<div class="<?php echo $input_column; ?>">
-					<input type="text" name="student_id" id="student_id"  class="form-control"/>
+			<?php } ?>
+
+			<?php if ($product['waist'] != null) { ?>
+				<div class="form-group row">
+					<label for="waist" class="<?php echo $label_column; ?>">เอว</label>
+					<div class="<?php echo $input_column; ?>">
+						<select name="waist" id="waist" class="form-control">
+							<?php generateChoice($product['waist']); ?>
+						</select>
+					</div>
 				</div>
-			</div>
+			<?php } ?>
+
+			<?php if ($product['waist_long'] != null) { ?>
+				<div class="form-group row">
+					<label for="waist_long" class="<?php echo $label_column; ?>">เอว</label>
+					<div class="<?php echo $input_column; ?>">
+						<select name="waist_long" id="waist_long" class="form-control">
+							<?php generateChoice($product['waist_long']); ?>
+						</select>
+					</div>
+				</div>
+			<?php } ?>
+
+			<?php if($product['student_info'] != null) {?>
+				<div class="form-group row">
+					<label for="student_id_or_name" class="<?php echo $label_column; ?>">กรอกชื่อหรือเลขประจำตัว</label>
+					<div class="<?php echo $input_column; ?>">
+						<input type="text" name="student_id_or_name" id="student_id_or_name"  class="form-control"/>
+					</div>
+				</div>
+			<?php } ?>
+
 			<div class="form-group row">
 				<label for="remark" class="<?php echo $label_column; ?>">หมายเหตุ</label>
 				<div class="<?php echo $input_column; ?>">

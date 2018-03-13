@@ -12,6 +12,14 @@
     $category_ = get('category');
     $src_thumb_ = $_FILES['src_thumb']['name'];
     $id_ = get('id');
+    // it's sometimes no singlequote cause sometimes it's null.
+    $size_ = getOrNull('size');
+    $school_logo_ = getOrNull('school_logo');
+    $student_info_ = getOrNull('student_info');
+    $star_ = getOrNull('star');
+    $waist_ = getOrNull('waist');
+    $waist_long_ = getOrNull('waist_long');
+    $color_ = getOrNull('color');
 
     $errors     = '';
     $isError = false;
@@ -71,38 +79,56 @@
       }
     }
 
-
+    // have image, no error
     if($uploadOk && !$isError && strlen($src_thumb_) > 0){
+      // if have id -> update product
       if(strlen($id_) > 0 ){
-        $conn->query("UPDATE `product` SET `title`='$title_',`detail_short`='$detail_short_',`detail`='$detail_',`price`='$price_',`category`='$category_',`src_thumb`='$target_file' WHERE `id`=".$id_);
+        $conn->query("UPDATE `product` SET `title`='$title_',`detail_short`='$detail_short_',`detail`='$detail_',`price`='$price_',`category`='$category_',`src_thumb`='$target_file'".
+        ", `size`=$size_, `school_logo`=$school_logo_, `student_info`=$student_info_, `star`=$star_, `waist`=$waist_, `waist_long`=$waist_long_, `color`=$color_ ".
+        "WHERE `id`=".$id_);
         echo '<script type="text/javascript">
         alert("อัพเดทสินค้าแล้ว");
         window.location.href = "product_list.php";
         </script>';
       }
+      // if no id -> create product
       else{
-        $conn->query("INSERT INTO `product`(`id`, `title`, `detail_short`, `detail`, `price`, `category`, `src_thumb`) VALUES (NULL,'$title_','$detail_short_','$detail_','$price_','$category_','$target_file')");
+        $conn->query("INSERT INTO `product`(`id`, `title`, `detail_short`, `detail`, `price`, `category`, `src_thumb`, `size`, `school_logo`, `student_info`, `star`, `waist`, `waist_long`, `color`) ".
+        "VALUES (NULL,'$title_','$detail_short_','$detail_','$price_','$category_','$target_file'".
+        "$size_, $school_logo_, $student_info_, $star_, $waist_, $waist_long_, $color_".
+        ")");
         echo '<script type="text/javascript">
         alert("เพิ่มสินค้าแล้ว");
         window.location.href = "product_list.php";
         </script>';
       }
-    }else if(!$isError) {
+    }
+    // no image, no error
+    else if(!$isError) {
+      // if have id -> update product
       if(strlen($id_) > 0 ){
-        $conn->query("UPDATE `product` SET `title`='$title_',`detail_short`='$detail_short_',`detail`='$detail_',`price`='$price_',`category`='$category_' WHERE `id`=".$id_);
+        $conn->query("UPDATE `product` SET `title`='$title_',`detail_short`='$detail_short_',`detail`='$detail_',`price`='$price_',`category`='$category_'".
+        ", `size`=$size_, `school_logo`=$school_logo_, `student_info`=$student_info_, `star`=$star_, `waist`=$waist_, `waist_long`=$waist_long_, `color`=$color_ ".
+        "WHERE `id`=".$id_);
         echo '<script type="text/javascript">
         alert("อัพเดทสินค้าแล้ว");
         window.location.href = "product_list.php";
         </script>';
       }
+      // if no id -> create product
       else{
-        $conn->query("INSERT INTO `product`(`id`, `title`, `detail_short`, `detail`, `price`, `category`) VALUES (NULL,'$title_','$detail_short_','$detail_','$price_','$category_')");
+        $conn->query("INSERT INTO `product`(`id`, `title`, `detail_short`, `detail`, `price`, `category`, `size`, `school_logo`, `student_info`, `star`, `waist`, `waist_long`, `color`) ".
+        "VALUES (NULL,'$title_','$detail_short_','$detail_','$price_','$category_'".
+        "$size_, $school_logo_, $student_info_, $star_, $waist_, $waist_long_, $color_".
+        ")");
         echo '<script type="text/javascript">
         alert("เพิ่มสินค้าแล้ว");
         window.location.href = "product_list.php";
         </script>';
       }
-    } else {
+    }
+    // error
+    else {
       echo '<script type="text/javascript">
       alert("ระบบผิดพลาด ไม่สามารถบันทึกข้อมูลได้!");
       window.location.href = "product_list.php";
@@ -172,6 +198,29 @@
                     ?>
                   </select>
                   <br/>
+                  <h3>ตัวเลือกสินค้า</h3>
+                  <p style="color: red;">ใส่ได้หลายตัวเลือกโดยคั่นด้วยเครื่องหมาย <b>, (จุลภาค)</b>
+                  <br />สามารถกำหนดราคาเพิ่มเติมได้โดยใส่ <b>+ ฿</b> เติมเข้าไปในตัวเลือก หรือไม่ใส่ก็ได้ (ฟรี)<i>
+                  <br />(ต้องมีเว้นวรรคระหว่างเครื่องหมาย + และ ฿ และไม่ต้องเดิมคำว่าบาทข้างหลัง)</i>
+                  <br /><b>ตัวอย่างเช่น</b> <br/><div style="color: #555; border: 1px solid #999; border-radius: 4px; background: #EEE; padding: 10px">S,<br/>M + ฿20.00,<br/>L + ฿50,<br/> XL + ฿30.75</div></p><br />
+                  <label>การเลือกขนาด</label>
+                  <textarea rows="5" name="size" id="size" class="form-control"><?php echo $row['size']; ?></textarea>
+                  </br>
+                  <label>การปักสัญลักษณ์โรงเรียน</label>
+                  <textarea rows="5" name="school_logo" id="school_logo" class="form-control"><?php echo $row['school_logo']; ?></textarea>
+                  </br>
+                  <label>การปักชื่อหรือเลขประจำตัว</label>
+                  <textarea rows="5" name="student_info" id="student_info" class="form-control"><?php echo $row['student_info']; ?></textarea>
+                  </br>
+                  <label>การปักดาวหรือจุด</label>
+                  <textarea rows="5" name="star" id="star" class="form-control"><?php echo $row['star']; ?></textarea>
+                  </br>
+                  <label>รอบเอว</label>
+                  <textarea rows="5" name="waist" id="waist" class="form-control"><?php echo $row['waist']; ?></textarea>
+                  </br>
+                  <label>เอวxยาว</label>
+                  <textarea rows="5" name="waist_long" id="waist_long" class="form-control"><?php echo $row['waist_long']; ?></textarea>
+                  </br>
                   <input type="submit" name="save_product" value="save" class="form-control btn btn-success"/>
                 </form>
               </div>
