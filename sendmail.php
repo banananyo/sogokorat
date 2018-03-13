@@ -14,8 +14,9 @@ function sendMail($dataemail, $email_type){
     $mail->Port = 587;
     $mail->Username = "sogokorat@hotmail.com";
     $mail->Password = "fh5Ye3QcvRq";
-    $mail->setFrom('sogokorat@hotmail.com', 'SogoKorat');
-    $mail->AddCC('sogokorat@hotmail.com', 'SogoKorat');
+    $mail->setFrom('sogokorat@hotmail.com', 'สำเนาใบสั่งซื้อ');
+    $mail->AddCC('sogokorat@hotmail.com', 'มีรายการสั่งซื้อใหม่ และนี่คือรายการสั่งซื้อ');
+
     //email_type
     // 101 == payment
     // 201 == contact

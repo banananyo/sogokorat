@@ -42,17 +42,14 @@ body {
 <?php include "sendmail.php"?>
 <?php 
     include('connect.php');
-    // $add_id = isset($_GET['add_product']) ? $_GET['add_product']:0;
-    // $amount = isset($_GET['amount']) ? $_GET['amount']:0;
-    if (isset($_POST['id'])) {
-        // echo '<script>console.log(JSON.parse(JSON.stringify('.json_encode($_POST).')));</script>';
-        ?>
-            <script>
-            const postArray = JSON.parse(JSON.stringify(<?php echo json_encode($_POST); ?>));
-            delete postArray.submit;
-            console.log(postArray);
-            </script>
-        <?php
+    function getAddonPrice($str) {
+        if(strlen($str) > 0) {
+            $subs = trim(substr($str, strrpos($str, '+ ฿')), '+ ฿');
+            return floatval(trim($subs, ' '));
+        }
+        else {
+            return 0;
+        }
     }
 
     if(isset($_POST['remove_index'])){
@@ -96,7 +93,7 @@ body {
         }
         // set it
         $_SESSION['cart'] = $n;
-        echo '<script>console.log(JSON.parse(JSON.stringify('.json_encode($_SESSION['cart']).')));</script>';
+        // echo '<script>console.log(JSON.parse(JSON.stringify('.json_encode($_SESSION['cart']).')));</script>';
         // echo '<script>window.location = window.location.href.split("?")[0];</script>';
     }
 
@@ -106,9 +103,10 @@ body {
         $mail_user =  trim($_POST['user_email']);
         $tel_user =  trim($_POST['user_tel']);
         $order_id = substr(time(),0,6);
-        $order_info=('รหัสสั่งซื้อ: '.$order_id.'<br/><br/>รายการที่สั่งซื้อ...<br/>'.
-        '<table cellpadding="0" cellspacing="0"><thead><tr><th>สินค้า</th><th>ราคาต่อชิ้น</th><th>จำนวน</th><th>ราคา</th>'.
-        '<th>ปักสัญลักษณ์โรงเรียน</th><th>ขนาด</th><th>ปักดาวหรือจุด</th><th>ปักชื่อหรือเลขประจำตัว</th><th>ชื่อหรือเลขประจำตัว</th><th>สี</th><th>เอว</th><th>เอวxยาว</th><th>หมายเหตุ</th>'.
+        $order_info=('<h2>รหัสสั่งซื้อ: '.$order_id.'</h2><br/>รายการที่สั่งซื้อ...<br/>'.
+        '<table cellpadding="0" cellspacing="0"><thead><tr><th>สินค้า</th>'.
+        '<th>ปักสัญลักษณ์โรงเรียน</th><th>ขนาด</th><th>ปักดาวหรือจุด</th><th>ปักชื่อหรือเลขประจำตัว</th><th>ชื่อหรือเลขประจำตัว</th><th>สี</th><th>เอว</th><th>เอวxยาว</th>'.
+        '<th>ราคาต่อชิ้น</th><th>จำนวน</th><th>ราคา</th><th>หมายเหตุ</th>'.
         '</tr></thead><tbody>');
 
         // make it start at 0
@@ -121,8 +119,17 @@ body {
             while($res_pp = $resp->fetch_assoc()){
                 $productp = $res_pp;
             }
-            $sum = $sum + ( ($cart[$ix]->amount)*($productp['price']) );
-            $order_info .= '<tr><td>'.$productp['title'].'</td><td>'.$productp['price'].'</td><td>'.($cart[$ix]->amount).'</td><td>'.($productp['price'] * $cart[$ix]->amount).'</td>'.
+            $addon = 0;
+            $addon += getAddonPrice($cart[$ix]->size);
+            $addon += getAddonPrice($cart[$ix]->school_logo);
+            $addon += getAddonPrice($cart[$ix]->student_info);
+            $addon += getAddonPrice($cart[$ix]->star);
+            $addon += getAddonPrice($cart[$ix]->waist);
+            $addon += getAddonPrice($cart[$ix]->waist_long);
+            $addon += getAddonPrice($cart[$ix]->color);
+
+            $sum = $sum + ( ($cart[$ix]->amount)*($productp['price'] + $addon) );
+            $order_info .= '<tr><td>'.$productp['title'].'</td>'.
             '<td>'.($cart[$ix]->school_logo).'</td>'.
             '<td>'.($cart[$ix]->size).'</td>'.
             '<td>'.($cart[$ix]->star).'</td>'.
@@ -131,11 +138,12 @@ body {
             '<td>'.($cart[$ix]->color).'</td>'.
             '<td>'.($cart[$ix]->waist).'</td>'.
             '<td>'.($cart[$ix]->waist_long).'</td>'.
+            '<td>'.($productp['price'] + $addon).'</td><td>'.($cart[$ix]->amount).'</td><td>'.(($productp['price'] + $addon) * $cart[$ix]->amount).'</td>'.
             '<td>'.($cart[$ix]->remark).'</td>'.
             '</tr>';
             $ix++;
         }
-        $order_info .= '<tr><td colspan="10" style="text-align: right">รวมทั้งสิ้น '.$sum.' บาท</td></tr></tbody></table>';
+        $order_info .= '<tr><td colspan="13" style="text-align: right; font-weight: bold; font-size: 24px;">รวมทั้งสิ้น '.$sum.' บาท</td></tr></tbody></table>';
         $res = $conn->query("INSERT INTO orders(`address_user`,`name_user`,`order_info`,`sum`,`tel_user`,`email_user`) VALUES('$address_user','$name_user', '$order_info','$sum','$tel_user','$mail_user')");
         if($res){ 
             
@@ -159,13 +167,14 @@ body {
 	<div class="wrapper">
 		<div class="ctiter"><span>ตะกร้าสินค้า</span></div>
 	<div class="row" style="padding:20px 0px; text-align: center;">
-	<?php 
+    <?php 
+        
         if(isset($_SESSION['cart']) && count((array) $_SESSION['cart']) > 0){
             echo '<table class="table table-bordered">';
             echo '<thead><tr><td>สินค้า</td>';
             echo '<td width="50px">จำนวน</td>';
-            echo '<td width="120px">ราคาต่อชิ้น</td>';
-            echo '<td width="120px">ราคารวม</td>';
+            echo '<td width="140px">ราคาต่อชิ้น(บาท)</td>';
+            echo '<td width="140px">ราคารวม(บาท)</td>';
             echo '<td width="30px"></td></tr></thead>';
             echo '<tbody style="font-weight: 700;">';
             // make it start at 0
@@ -178,9 +187,18 @@ body {
                 while($res_p = $res->fetch_assoc()){
                     $product = $res_p;
                 }
-                
+                // calculate addon (product_options)
+                $addon = 0;
+                $addon += getAddonPrice($cart[$i]->size);
+                $addon += getAddonPrice($cart[$i]->school_logo);
+                $addon += getAddonPrice($cart[$i]->student_info);
+                $addon += getAddonPrice($cart[$i]->star);
+                $addon += getAddonPrice($cart[$i]->waist);
+                $addon += getAddonPrice($cart[$i]->waist_long);
+                $addon += getAddonPrice($cart[$i]->color);
+
                 $amount_i = $cart[$i]->amount;
-                $sum = $sum + (($product['price']) *$amount_i);
+                $sum = $sum + (($product['price'] + $addon) *$amount_i);
                 echo '<tr>';
                 echo '<td>'.$product['title'].'<br />';
 
@@ -200,8 +218,10 @@ body {
 
                 echo '</td>';
                 echo '<td>'.$cart[$i]->amount.'</td>';
-                echo '<td>'.(($product['price'])).'</td>';
-                echo '<td>'.(($product['price'])*$amount_i).'</td>';
+                echo '<td>'.(($product['price']));
+                if($addon > 0) echo ' + '.$addon;
+                echo '</td>';
+                echo '<td>'.(($product['price'] + $addon)*$amount_i).'</td>';
                 
                 echo '<td><form method="POST" action="cart.php">';
                 echo '<input type="hidden" name="remove_index" value="'.$cart[$i]->id.'" />';
@@ -215,21 +235,21 @@ body {
             echo '</tbody></table>';
             ?>
             <div class="row">
-            <form action="" method="post" class="col-xs-12 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4 col-lg-4 col-lg-offset-4" role="form">
+            <form action="" method="post" id="order_now_form" class="col-xs-12 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4 col-lg-4 col-lg-offset-4" role="form" onsubmit="return checkForm();">
                 <div class="form-group" >
-                    <label for="user_name">ชื่อ</label>
+                    <label for="user_name">ชื่อ <span style="color: red">*</span></label>
                     <input type="text" name="user_name" id="user_name" class="form-control" placeholder="กรอกชื่อ"/>
                 </div>
                 <div class="form-group" >
-                    <label for="user_email">อีเมล</label>
+                    <label for="user_email">อีเมล <span style="color: red">*</span></label>
                     <input type="text" name="user_email" id="user_email" class="form-control" placeholder="กรอกอีเมล "/>
                 </div>
                 <div class="form-group" >
-                    <label for="user_tel">เบอร์โทรศัพท์</label>
+                    <label for="user_tel">เบอร์โทรศัพท์ <span style="color: red">*</span></label>
                     <input type="text" name="user_tel" id="user_tel" class="form-control" placeholder="กรอกเบอร์โทรศัพท์"/>
                 </div>
                 <div class="form-group" >
-                    <label for="user_address">ที่อยู่ที่ต้องการจัดส่ง</label>
+                    <label for="user_address">ที่อยู่ที่ต้องการจัดส่ง <span style="color: red">*</span></label>
                     <textarea name="user_address" id="user_address" class="form-control" placeholder="กรอกที่อยู่ในการจัดสั่ง"></textarea>
                 </div>
                 <input type="submit" name="order_now" class="btn btn-info" style="font-size: 20px" value="สั่งซื้อทั้งหมดตอนนี้" />
@@ -249,6 +269,16 @@ body {
 
 </body>
 <script>
-
+function checkForm() {
+    const user_name = $('#user_name').val();
+    const user_email = $('#user_email').val();
+    const user_tel = $('#user_tel').val();
+    const user_address = $('#user_address').val();
+    if (user_name.length <= 0 || user_email.length <=0 || user_tel.length <= 0 || user_address.length <= 0) {
+        alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+        return false;
+    }
+    return true;
+}
 </script>
 </html>
