@@ -55,7 +55,9 @@ body {
 	if(isset($product)){ ?>
 		<img src="<?php echo str_replace('../images','images',$product['src_thumb']); ?>" style="max-height: 360px; width: auto" />
 		<div style="color: rgb(150,150,180); font-size: 35px">ราคา: <?php echo $product['price']; ?> บาท</div>
-		<div style="display: flex; justify-content: center; flex-direction: column; align-items: center;"><?php echo str_replace('../images','images',$product['detail']); ?></div>
+		<div style="width: 100%; overflow: auto; position: relative">
+			<?php echo str_replace('../images','images',$product['detail']); ?>
+		</div>
 		<form method="post" action="cart.php" class="form" id="form_order" onsubmit="return formcheck();">
 			<input type="hidden" id="id" name="id" value="<?php echo $product['id']; ?>" />
 			

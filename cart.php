@@ -166,11 +166,11 @@ body {
 <div class="container">
 	<div class="wrapper">
 		<div class="ctiter"><span>ตะกร้าสินค้า</span></div>
-	<div class="row" style="padding:20px 0px; text-align: center;">
+	<div class="row" style="padding:20px 0px; text-align: center;overflow-x:scroll">
     <?php 
         
         if(isset($_SESSION['cart']) && count((array) $_SESSION['cart']) > 0){
-            echo '<table class="table table-bordered">';
+            echo '<table class="table table-bordered" style="min-width: 768px;">';
             echo '<thead><tr><td>สินค้า</td>';
             echo '<td width="50px">จำนวน</td>';
             echo '<td width="140px">ราคาต่อชิ้น(บาท)</td>';
@@ -232,7 +232,7 @@ body {
                 $i++;
             }
             echo '<tr><td></td><td></td><td></td><td>'.$sum.'</td><td></td></tr>';
-            echo '</tbody></table>';
+            echo '</tbody></table></div>';
             ?>
             <div class="row">
             <form action="" method="post" id="order_now_form" class="col-xs-12 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4 col-lg-4 col-lg-offset-4" role="form" onsubmit="return checkForm();">
