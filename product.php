@@ -28,9 +28,17 @@
   <script src="js/bootstrap.min.js"></script>
   <script src="js/owl.carousel.min.js"></script>
   <script type="text/javascript" src="js/main.js"></script>
+
   <style type="text/css">
   body {
-   margin-top: 0px;
+    margin-top: 0px;
+  }
+ .grid-sizer, .grid-item { width: calc(25% - 10px); }
+ @media screen and (max-width: 992px) {
+  .grid-sizer, .grid-item { width: calc(33% - 10px); }
+ }
+ @media screen and (max-width: 768px) {
+  .grid-sizer, .grid-item { width: calc(50% - 10px); }
  }
 </style>
 </head>
@@ -48,6 +56,9 @@
         <?php include('connect.php');
           
           if(isset($_GET['cat'])){
+            $cat =$_GET['cat'];
+            $res = $conn->query("SELECT * FROM product WHERE category='$cat'");
+            $res_name_cat = $conn->query("SELECT * FROM category WHERE id='$cat'");
             ?>
               <div class="row">
               <div class="box_project_main">
@@ -67,49 +78,13 @@
               </div>
               <hr/>
             <?php
-            $cat =$_GET['cat'];
-            $res = $conn->query("SELECT * FROM product WHERE category='$cat'");
-            $res_name_cat = $conn->query("SELECT * FROM category WHERE id='$cat'");
             while($row=$res_name_cat->fetch_assoc()){
               echo '<h2>สินค้าในหมวดหมู่'.$row['name'].'</h2><hr/>';
             }
-            while($row=$res->fetch_assoc()){
-              ?>
-              
-              <div class="box_project_main">
-              <!-- Gal 1-->
-
-              <div class="col-xs-12 col-sm-3 col-md-3" style="padding:0px 15px;">
-                <div class="frame">
-                <figure><a href="product_detail.php?id=<?php echo $row['id'];?>"><img src="<?php echo str_replace('../','',$row['src_thumb']); ?>" class="img-responsive"></a></figure>
-                <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                  <tr>
-                    <td style="height:auto;"><font style="font-size:22px; padding:15px; color:#23376c;"><?php echo $row['title']; ?></font></h2></td>
-                  </tr>
-                </table>
-
-                <div>
-                  <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                    <tr>
-                      <td valign="middle" align="left" style="height:auto; padding:0px 15px; font-size:18px;"><p style="color:#666"><?php echo $row['detail_short']; ?></p></td>
-                    </tr>
-                  </table>
-
-                </div>
-                <div align="right" style="padding-right:15px; padding-bottom:15px;">ราคา : <font color="#FF0000"><?php echo $row['price']; ?></font> ฿</div>
-
-                <div class="read-more"><a href="product_detail.php?id=<?php echo $row['id'];?>">รายละเอียดเพิ่มเติม <i class="fa fa-arrow-circle-o-right f-14"></i></a></div>
-              </div><!--frame-->
-            </div><!--col-md-4-->
-            </div>
-
-            <!-- End Gal 1-->
-              <?php
-            } //while end
-            
           }else{
             echo '<h2>หมวดหมู่สินค้า</h2><hr/>';
             $res_cat = $conn->query("SELECT * FROM category");
+            
             while($row_cat=$res_cat->fetch_assoc()){
               ?>
 
@@ -132,41 +107,39 @@
             }
             $res = $conn->query("SELECT * FROM product");
             echo '<div class="row"><div class="col-sm-12"><br/></div></div><h2>สินค้าทั้งหมด</h2><hr/>';
+        } ?>
+            
+        
+        
+        
+        
+        
+        
+         <div class="grid" >
+          <div class="grid-sizer"></div>
+            <?php
             while($row=$res->fetch_assoc()){
               ?>
-              
-              <div class="box_project_main">
-              <!-- Gal 1-->
-
-              <div class="col-xs-12 col-sm-3 col-md-3" style="padding:0px 15px;">
+              <div class="grid-item">
                 <div class="frame">
-                <figure><a href="product_detail.php?id=<?php echo $row['id'];?>"><img src="<?php echo str_replace('../','',$row['src_thumb']); ?>" class="img-responsive"></a></figure>
-                <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                  <tr>
-                    <td style="height:auto;"><font style="font-size:22px; padding:15px; color:#23376c;"><?php echo $row['title']; ?></font></h2></td>
-                  </tr>
-                </table>
+                  <figure>
+                    <a href="product_detail.php?id=<?php echo $row['id'];?>" style="width: 100%">
+                      <img src="<?php echo str_replace('../','',$row['src_thumb']); ?>" style="object-fit: contain; width: 100%;">
+                    </a>
+                  </figure>
+                  <p style="padding: 0 0 10px 0;margin-top: 10px;border-bottom: 1px solid #d1d1d1;"><font style="font-size:22px; padding:15px; color:#23376c;"><?php echo $row['title']; ?></font></p>
 
-                <div>
-                  <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                    <tr>
-                      <td valign="middle" align="left" style="height:auto; padding:0px 15px; font-size:18px;"><p style="color:#666"><?php echo $row['detail_short']; ?></p></td>
-                    </tr>
-                  </table>
+                  <div style="padding: 0 15px;color:#666"><?php echo $row['detail_short']; ?></div>
 
+                  <div align="right" style="padding-right:15px; padding-bottom:15px;">ราคา : <font color="#FF0000"><?php echo $row['price']; ?></font> ฿</div>
+
+                  <div class="read-more"><a href="product_detail.php?id=<?php echo $row['id'];?>">รายละเอียดเพิ่มเติม <i class="fa fa-arrow-circle-o-right f-14"></i></a></div>
                 </div>
-                <div align="right" style="padding-right:15px; padding-bottom:15px;">ราคา : <font color="#FF0000"><?php echo $row['price']; ?></font> ฿</div>
-
-                <div class="read-more"><a href="product_detail.php?id=<?php echo $row['id'];?>">รายละเอียดเพิ่มเติม <i class="fa fa-arrow-circle-o-right f-14"></i></a></div>
-              </div><!--frame-->
-            </div><!--col-md-4-->
-            </div>
-
-            <!-- End Gal 1-->
+              </div>
               <?php
             } //while end
-          } // if end
         ?>
+        </div>
 
 </div><!-- Box -->
 <!-- </div> -->
@@ -179,7 +152,16 @@
 
 
 <?php include "inc/inc_footer.php" ?><!--row-->
+<script type="text/javascript" src="js/masonry.min.js"></script>
+<script>
+$('.grid').masonry({
+  itemSelector: '.grid-item',
+  columnWidth: 0,
+  horizontalOrder: true,
+  gutter: 10,
+  percentPosition: true,
+});
 
-
+</script>
 </body>
 </html>

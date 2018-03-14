@@ -201,25 +201,27 @@
                   <h3>ตัวเลือกสินค้า</h3>
                   <p style="color: red;">ใส่ได้หลายตัวเลือกโดยคั่นด้วยเครื่องหมาย <b>, (จุลภาค)</b>
                   <br />สามารถกำหนดราคาเพิ่มเติมได้โดยใส่ <b>+ ฿</b> เติมเข้าไปในตัวเลือก หรือไม่ใส่ก็ได้ (ฟรี)<i>
-                  <br />(ต้องมีเว้นวรรคระหว่างเครื่องหมาย + และ ฿ และไม่ต้องเดิมคำว่าบาทข้างหลัง)</i>
+                  <br />(ต้องมีเว้นวรรคระหว่างเครื่องหมาย + และ ฿ และไม่ต้องเดิมคำว่าบาทข้างหลัง)</i> 
+                  <br /><input type="text" class="form-control" value="+ ฿" id="toCpy" style="width: 100px"/>
+                  <button type="button" class="copy btn btn-info" data-clipboard-target="#toCpy">กดเพื่อคัดลอก</button>
                   <br /><b>ตัวอย่างเช่น</b> <br/><div style="color: #555; border: 1px solid #999; border-radius: 4px; background: #EEE; padding: 10px">S,<br/>M + ฿20.00,<br/>L + ฿50,<br/> XL + ฿30.75</div></p><br />
                   <label>การเลือกขนาด</label>
-                  <textarea rows="5" name="size" id="size" class="form-control"><?php echo $row['size']; ?></textarea>
+                  <textarea rows="5" name="size" id="size" class="form-control"><?php if(isset($row['size'])) echo $row['size']; ?></textarea>
                   </br>
                   <label>การปักสัญลักษณ์โรงเรียน</label>
-                  <textarea rows="5" name="school_logo" id="school_logo" class="form-control"><?php echo $row['school_logo']; ?></textarea>
+                  <textarea rows="5" name="school_logo" id="school_logo" class="form-control"><?php if(isset($row['school_logo'])) echo $row['school_logo']; ?></textarea>
                   </br>
                   <label>การปักชื่อหรือเลขประจำตัว</label>
-                  <textarea rows="5" name="student_info" id="student_info" class="form-control"><?php echo $row['student_info']; ?></textarea>
+                  <textarea rows="5" name="student_info" id="student_info" class="form-control"><?php if(isset($row['student_info'])) echo $row['student_info']; ?></textarea>
                   </br>
                   <label>การปักดาวหรือจุด</label>
-                  <textarea rows="5" name="star" id="star" class="form-control"><?php echo $row['star']; ?></textarea>
+                  <textarea rows="5" name="star" id="star" class="form-control"><?php if(isset($row['star'])) echo $row['star']; ?></textarea>
                   </br>
                   <label>รอบเอว</label>
-                  <textarea rows="5" name="waist" id="waist" class="form-control"><?php echo $row['waist']; ?></textarea>
+                  <textarea rows="5" name="waist" id="waist" class="form-control"><?php if(isset($row['waist'])) echo $row['waist']; ?></textarea>
                   </br>
                   <label>เอวxยาว</label>
-                  <textarea rows="5" name="waist_long" id="waist_long" class="form-control"><?php echo $row['waist_long']; ?></textarea>
+                  <textarea rows="5" name="waist_long" id="waist_long" class="form-control"><?php if(isset($row['waist_long'])) echo $row['waist_long']; ?></textarea>
                   </br>
                   <input type="submit" name="save_product" value="save" class="form-control btn btn-success"/>
                 </form>
@@ -234,6 +236,15 @@
     <!-- /.content-wrapper-->
     <?php include('footer.php'); ?>
 </body>
+<!-- <script>
+  var clipboard = new Clipboard('.copy');
+    clipboard.on('success', function(e) {
+        console.log(e);
+    });
+    clipboard.on('error', function(e) {
+        console.log(e);
+    });
+</script> -->
 <script>
     // Replace the <textarea id="editor1"> with a CKEditor
     // instance, using default configuration.
