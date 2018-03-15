@@ -153,15 +153,18 @@
 
 <?php include "inc/inc_footer.php" ?><!--row-->
 <script type="text/javascript" src="js/masonry.min.js"></script>
+<script type="text/javascript" src="js/imagesloaded.min.js"></script>
 <script>
-$('.grid').masonry({
+var $grid = $('.grid').masonry({
   itemSelector: '.grid-item',
   columnWidth: 0,
   horizontalOrder: true,
   gutter: 10,
   percentPosition: true,
 });
-
+$grid.imagesLoaded().progress( function() {
+  $grid.masonry('layout');
+});
 </script>
 </body>
 </html>
