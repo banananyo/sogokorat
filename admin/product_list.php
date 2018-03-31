@@ -71,6 +71,9 @@
                   <td><?php echo $category['name']; ?></td>
                   <td>
                     <form action="product.php" method="post" style="display: inline;">
+                      <input type="hidden" name="old_q" value="<?php echo get('q'); ?>">
+                      <input type="hidden" name="old_position" value="<?php echo $position; ?>">
+                      <input type="hidden" name="old_size" value="<?php echo $size; ?>">
                       <input type="hidden" name="id" value="<?php echo $row['id']; ?>"/>
                       <input type="submit" name="edit_product" value="แก้ไข" class="btn btn-info" />
                     </form>&nbsp;
@@ -86,7 +89,7 @@
             </table>
 
             <form action="" method="get" id="paging_form">
-              <input type="hidden" name="size" value="<?php echo $size; ?>">
+              <!-- <input type="hidden" name="size" value="<?php //echo $size; ?>"> -->
               <input type="hidden" name="q" value="<?php echo get('q'); ?>">
 
               <div class="row">

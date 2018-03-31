@@ -4,6 +4,13 @@
 
 <?php include('head.php'); include('../connect.php');?>
 <?php
+
+  function alertAndGoBack($message) {
+    echo '<script type="text/javascript">
+        alert("'.$message.'");
+        window.location.href = "product_list.php?q='.get('old_q').'&size='.get('old_size').'&position='.get('old_position').'";
+        </script>';
+  }
   if(get('save_product')!="") {
     $title_ = get('title');
     $detail_short_ = get('detail_short');
@@ -86,10 +93,11 @@
         $conn->query("UPDATE `product` SET `title`='$title_',`detail_short`='$detail_short_',`detail`='$detail_',`price`='$price_',`category`='$category_',`src_thumb`='$target_file'".
         ", `size`=$size_, `school_logo`=$school_logo_, `student_info`=$student_info_, `star`=$star_, `waist`=$waist_, `waist_long`=$waist_long_, `color`=$color_ ".
         "WHERE `id`=".$id_);
-        echo '<script type="text/javascript">
-        alert("อัพเดทสินค้าแล้ว");
-        window.location.href = "product_list.php";
-        </script>';
+        // echo '<script type="text/javascript">
+        // alert("อัพเดทสินค้าแล้ว");
+        // window.location.href = "product_list.php";
+        // </script>';
+        alertAndGoBack('อัพเดทสินค้าแล้ว');
       }
       // if no id -> create product
       else{
@@ -97,10 +105,11 @@
         "VALUES (NULL,'$title_','$detail_short_','$detail_','$price_','$category_','$target_file',".
         "$size_, $school_logo_, $student_info_, $star_, $waist_, $waist_long_, $color_".
         ")");
-        echo '<script type="text/javascript">
-        alert("เพิ่มสินค้าแล้ว");
-        window.location.href = "product_list.php";
-        </script>';
+        // echo '<script type="text/javascript">
+        // alert("เพิ่มสินค้าแล้ว");
+        // window.location.href = "product_list.php";
+        // </script>';
+        alertAndGoBack('เพิ่มสินค้าแล้ว');
       }
     }
     // no image, no error
@@ -110,10 +119,11 @@
         $conn->query("UPDATE `product` SET `title`='$title_',`detail_short`='$detail_short_',`detail`='$detail_',`price`='$price_',`category`='$category_'".
         ", `size`=$size_, `school_logo`=$school_logo_, `student_info`=$student_info_, `star`=$star_, `waist`=$waist_, `waist_long`=$waist_long_, `color`=$color_ ".
         "WHERE `id`=".$id_);
-        echo '<script type="text/javascript">
-        alert("อัพเดทสินค้าแล้ว");
-        window.location.href = "product_list.php";
-        </script>';
+        // echo '<script type="text/javascript">
+        // alert("อัพเดทสินค้าแล้ว");
+        // window.location.href = "product_list.php";
+        // </script>';
+        alertAndGoBack('อัพเดทสินค้าแล้ว');
       }
       // if no id -> create product
       else{
@@ -121,18 +131,20 @@
         "VALUES (NULL,'$title_','$detail_short_','$detail_','$price_','$category_',".
         "$size_, $school_logo_, $student_info_, $star_, $waist_, $waist_long_, $color_".
         ")");
-        echo '<script type="text/javascript">
-        alert("เพิ่มสินค้าแล้ว");
-        window.location.href = "product_list.php";
-        </script>';
+        // echo '<script type="text/javascript">
+        // alert("เพิ่มสินค้าแล้ว");
+        // window.location.href = "product_list.php";
+        // </script>';
+        alertAndGoBack('เพิ่มสินค้าแล้ว');
       }
     }
     // error
     else {
-      echo '<script type="text/javascript">
-      alert("ระบบผิดพลาด ไม่สามารถบันทึกข้อมูลได้!");
-      window.location.href = "product_list.php";
-      </script>';
+      // echo '<script type="text/javascript">
+      // alert("ระบบผิดพลาด ไม่สามารถบันทึกข้อมูลได้!");
+      // window.location.href = "product_list.php";
+      // </script>';
+      alertAndGoBack('ระบบผิดพลาด ไม่สามารถบันทึกข้อมูลได้!');
     }
   }
 ?>
@@ -169,7 +181,10 @@
                 <iframe src="image_upload.php" frameborder="0" style="height: 90%; width: 100%;"></iframe>
               </div> -->
               <div class="col-sm-12">
-                <form method="post" action="" enctype="multipart/form-data" >
+                <form method="post" action="" enctype="multipart/form-data" id="productForm">
+                  <input type="hidden" name="old_q" value="<?php echo get('old_q'); ?>">
+                  <input type="hidden" name="old_position" value="<?php echo get('old_position'); ?>">
+                  <input type="hidden" name="old_size" value="<?php echo get('old_size'); ?>">
                   <div style="text-align: center;"><img src="<?php echo $row['src_thumb']; ?>" class="img-fluid" /></div>
                   <input type="hidden" name="id" value="<?php echo $row['id']; ?>"/><br/>
                   <label>รูปปกสินค้า <p style="color: red;">ไฟล์รูปแบบ jpeg, jpg เท่านั้น | ขนาดไม่เกิน 200 MB | กว้าง * ยาว ไม่เกิน 2048px * 2048px</p></label>
@@ -199,29 +214,35 @@
                   </select>
                   <br/>
                   <h3>ตัวเลือกสินค้า</h3>
-                  <p style="color: red;">ใส่ได้หลายตัวเลือกโดยคั่นด้วยเครื่องหมาย <b>, (จุลภาค)</b>
-                  <br />สามารถกำหนดราคาเพิ่มเติมได้โดยใส่ <b>+ ฿</b> เติมเข้าไปในตัวเลือก หรือไม่ใส่ก็ได้ (ฟรี)<i>
-                  <br />(ต้องมีเว้นวรรคระหว่างเครื่องหมาย + และ ฿ และไม่ต้องเดิมคำว่าบาทข้างหลัง)</i> 
-                  <br /><input type="text" class="form-control" value="+ ฿" id="toCpy" style="width: 100px"/>
+                  <p >ใส่ได้หลายตัวเลือกโดยคั่นด้วยเครื่องหมาย <b style="color: red;">, (จุลภาค)</b>
+                  <br />สามารถกำหนดราคาเพิ่มเติมได้โดยใส่ <b style="color: red;">+ ฿</b> เติมเข้าไปในตัวเลือก หรือไม่ใส่ก็ได้ (ฟรี)<i>
+                  <br />(ต้องมีเว้นวรรคระหว่างเครื่องหมาย <b style="color: red;">+ และ ฿</b> และไม่ต้องเดิมคำว่าบาทข้างหลัง)</i> 
+                  <br /><input type="text" class="form-control" value="+ ฿" id="toCpy" style="width: 100px" readonly/>
                   <button type="button" class="copy btn btn-info" data-clipboard-target="#toCpy">กดเพื่อคัดลอก</button>
                   <br /><b>ตัวอย่างเช่น</b> <br/><div style="color: #555; border: 1px solid #999; border-radius: 4px; background: #EEE; padding: 10px">S,<br/>M + ฿20.00,<br/>L + ฿50,<br/> XL + ฿30.75</div></p><br />
                   <label>การเลือกขนาด</label>
-                  <textarea rows="5" name="size" id="size" class="form-control"><?php if(isset($row['size'])) echo $row['size']; ?></textarea>
+                  <textarea rows="5" name="size" id="size" class="form-control" onblur="checkField(this)" onfocus="checkField(this)"><?php if(isset($row['size'])) echo $row['size']; ?></textarea>
+                  <p id="message_size" style="color: red; display: none;">โปรดตวจสอบให้แน่ใจว่าท่านใส่เครื่องหมาย + เว้นวรรค และ ฿ อย่างถูกต้อง</p>
                   </br>
                   <label>การปักสัญลักษณ์โรงเรียน</label>
-                  <textarea rows="5" name="school_logo" id="school_logo" class="form-control"><?php if(isset($row['school_logo'])) echo $row['school_logo']; ?></textarea>
+                  <textarea rows="5" name="school_logo" id="school_logo" class="form-control" onblur="checkField(this)" onfocus="checkField(this)"><?php if(isset($row['school_logo'])) echo $row['school_logo']; ?></textarea>
+                  <p id="message_school_logo" style="color: red; display: none;">โปรดตวจสอบให้แน่ใจว่าท่านใส่เครื่องหมาย + เว้นวรรค และ ฿ อย่างถูกต้อง</p>
                   </br>
                   <label>การปักชื่อหรือเลขประจำตัว</label>
-                  <textarea rows="5" name="student_info" id="student_info" class="form-control"><?php if(isset($row['student_info'])) echo $row['student_info']; ?></textarea>
+                  <textarea rows="5" name="student_info" id="student_info" class="form-control" onblur="checkField(this)" onfocus="checkField(this)"><?php if(isset($row['student_info'])) echo $row['student_info']; ?></textarea>
+                  <p id="message_student_info" style="color: red; display: none;">โปรดตวจสอบให้แน่ใจว่าท่านใส่เครื่องหมาย + เว้นวรรค และ ฿ อย่างถูกต้อง</p>
                   </br>
                   <label>การปักดาวหรือจุด</label>
-                  <textarea rows="5" name="star" id="star" class="form-control"><?php if(isset($row['star'])) echo $row['star']; ?></textarea>
+                  <textarea rows="5" name="star" id="star" class="form-control" onblur="checkField(this)" onfocus="checkField(this)"><?php if(isset($row['star'])) echo $row['star']; ?></textarea>
+                  <p id="message_star" style="color: red; display: none;">โปรดตวจสอบให้แน่ใจว่าท่านใส่เครื่องหมาย + เว้นวรรค และ ฿ อย่างถูกต้อง</p>
                   </br>
                   <label>รอบเอว</label>
-                  <textarea rows="5" name="waist" id="waist" class="form-control"><?php if(isset($row['waist'])) echo $row['waist']; ?></textarea>
+                  <textarea rows="5" name="waist" id="waist" class="form-control" onblur="checkField(this)" onfocus="checkField(this)"><?php if(isset($row['waist'])) echo $row['waist']; ?></textarea>
+                  <p id="message_waist" style="color: red; display: none;">โปรดตวจสอบให้แน่ใจว่าท่านใส่เครื่องหมาย + เว้นวรรค และ ฿ อย่างถูกต้อง</p>
                   </br>
                   <label>เอวxยาว</label>
-                  <textarea rows="5" name="waist_long" id="waist_long" class="form-control"><?php if(isset($row['waist_long'])) echo $row['waist_long']; ?></textarea>
+                  <textarea rows="5" name="waist_long" id="waist_long" class="form-control" onblur="checkField(this)" onfocus="checkField(this)"><?php if(isset($row['waist_long'])) echo $row['waist_long']; ?></textarea>
+                  <p id="message_waist_long" style="color: red; display: none;">โปรดตวจสอบให้แน่ใจว่าท่านใส่เครื่องหมาย + เว้นวรรค และ ฿ อย่างถูกต้อง</p>
                   </br>
                   <input type="submit" name="save_product" value="save" class="form-control btn btn-success"/>
                 </form>
@@ -250,5 +271,43 @@
     // instance, using default configuration.
     CKEDITOR.replace( 'detail_short' );
     CKEDITOR.replace( 'detail' );
+
+    const checkOptions = function(fieldValue) {
+      let isValid = true;
+      fieldValue.split(',').forEach(function(option) {
+        const splitPlus = option.split('+');
+        if (splitPlus.length > 1 && isValid === true) {
+          const v = splitPlus[1].includes(' ฿')
+          isValid = v;
+        }
+      });
+      return isValid;
+    }
+    const checkField = function(element) {
+      const val = element.value;
+      const id = element.id;
+      const isValid = checkOptions(val);
+      if (isValid) {
+        $('#message_'+id).hide();
+      } else {
+        $('#message_'+id).show();
+      }
+    }
+    // const validateForm = function() {
+    //   const formFields = $('#productForm').serializeArray();
+    //   let obj = {};
+    //   formFields.forEach(function(item) {
+    //     obj[item.name] = item;
+    //   });
+
+    //   if (obj.school_logo.value !== '') {
+    //     obj.school_logo.isValid = checkOptions(obj.school_logo.value);
+    //   }
+    //   if (obj.size.value !== '') {
+    //     obj.size.isValid = checkOptions(obj.size.value);
+    //   }
+
+    //   return false;
+    // }
 </script>
 </html>

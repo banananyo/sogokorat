@@ -43,7 +43,7 @@ body {
 <?php 
     include('connect.php');
     function getAddonPrice($str) {
-        if(strlen($str) > 0) {
+        if(strlen($str) > 0 && strpos($str, '+ ฿') !== false) {
             $subs = trim(substr($str, strrpos($str, '+ ฿')), '+ ฿');
             return floatval(trim($subs, ' '));
         }
