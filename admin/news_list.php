@@ -51,8 +51,10 @@
                   $start = ($position-1) * $size;
                   if(get('q')!=""){
                     $result = $conn->query("SELECT * FROM news WHERE title LIKE '%".get('q')."%' ORDER BY id LIMIT $start, $size");
+                    $result_nopaging = $conn->query("SELECT * FROM news WHERE title LIKE '%".get('q')."%' ORDER BY id");
                   }else{
                     $result = $conn->query("SELECT * FROM news ORDER BY id LIMIT $start, $size");
+                    $result_nopaging = $conn->query("SELECT * FROM news ORDER BY id");
                   }
                   // $count = mysqli_num_rows($result);
                   $index=1;
@@ -108,7 +110,7 @@
                     <select class="form-control" name="position" onchange="PagingForm()">
                       <?php
                         $x=0;
-                        $pages = mysqli_num_rows($conn->query("SELECT * FROM news")) / $size;
+                        $pages = ceil(mysqli_num_rows($result_nopaging) / $size);
                         while($x < $pages){
                           echo '<option value="'.($x+1).'" '.($position==($x+1) ? 'selected':'').'>'.($x+1).'</option>';
                           $x++;
@@ -117,6 +119,15 @@
                     </select>
                   </div>
                 </div>
+                <div class="col-sm-12 text-center" style="font-size: 16px; margin: 10px 0;">
+                    <span>แสดงหน้าที่</span>
+                    <span><?php echo $position; ?></span>
+                    <span>จากทั้งหมด</span>
+                    <span><?php echo $pages; ?></span>
+                    <span>หน้า</span>
+                  </div>
+                </div>
+
               </div>
             </form>
           </div>

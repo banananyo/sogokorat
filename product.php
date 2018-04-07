@@ -84,40 +84,41 @@
           }else{
             echo '<h2>หมวดหมู่สินค้า</h2><hr/>';
             $res_cat = $conn->query("SELECT * FROM category");
+            ?>
+            <div class="grid" >
+              <div class="grid-sizer"></div>
+            <?php
             
             while($row_cat=$res_cat->fetch_assoc()){
               ?>
 
-              <div class="box_project_main">
-                <!-- Gal 1-->
-                <a href="product.php?cat=<?php echo $row_cat['id'];?>">
-                <div class="col-xs-12 col-sm-3 col-md-3" style="padding:0px 15px;">
-                  <div class="frame">
-                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                      <tr>
-                        <td style="height:auto;"><font style="font-size:22px; padding:15px; color:#23376c;"><?php echo $row_cat['name']; ?></font></h2></td>
-                      </tr>
-                    </table>
-                  </div><!--frame-->
-                </div><!--col-md-4-->
-                </a>
+              <div class="grid-item">
+                <div class="frame">
+                  <a href="product.php?cat=<?php echo $row_cat['id'];?>">
+                    <p style="font-size:22px; padding:15px; color:#23376c; text-align: center; margin: 0"><?php echo $row_cat['name']; ?></p>
+                  </a>
+                </div>
               </div>
+              
 
               <?php
             }
+            ?></div><?php
             $res = $conn->query("SELECT * FROM product");
             echo '<div class="row"><div class="col-sm-12"><br/></div></div><h2>สินค้าทั้งหมด</h2><hr/>';
-        } ?>
-            
+        } 
         
-        
-        
-        
-        
+        if($res->num_rows == 0){
+          ?>
+          <div><h2 style="text-align: center; color: red;">ไม่พบสินค้าที่ค้นหา</h2></div>
+          <?php
+        } else {
+        ?>
         
          <div class="grid" >
           <div class="grid-sizer"></div>
             <?php
+            
             while($row=$res->fetch_assoc()){
               ?>
               <div class="grid-item">
@@ -140,6 +141,7 @@
             } //while end
         ?>
         </div>
+      <?php } ?>
 
 </div><!-- Box -->
 <!-- </div> -->

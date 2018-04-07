@@ -42,10 +42,16 @@
 <span class="nav-link-text">วิธีการสั่งซื้อ</span>
 </a>
 </li>
-<li class="nav-item" data-toggle="tooltip" data-placement="right" title="การชำระเงิน">
+<li class="nav-item" data-toggle="tooltip" data-placement="right" title="รายการสั่งซื้อ">
+<a class="nav-link" href="orders_list.php">
+<i class="fa fa-fw fa-bars"></i>
+<span class="nav-link-text">รายการสั่งซื้อ</span>
+</a>
+</li>
+<li class="nav-item" data-toggle="tooltip" data-placement="right" title="รายการแจ้งชำระเงิน">
 <a class="nav-link" href="payment_list.php">
 <i class="fa fa-fw fa-dollar"></i>
-<span class="nav-link-text">การชำระเงิน</span>
+<span class="nav-link-text">รายการแจ้งชำระเงิน</span>
 </a>
 </li>
 <li class="nav-item" data-toggle="tooltip" data-placement="right" title="ติดต่อเรา">

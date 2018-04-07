@@ -4,10 +4,10 @@
 
 <?php include('head.php'); include('../connect.php');?>
 <?php
-  if(get('delete_category')!=""){
+  if(get('delete_orders')!=""){
     $id_ = get('id');
-    $conn->query("DELETE FROM `category` WHERE `id`=$id_");
-    header("location: category_list.php");
+    $conn->query("DELETE FROM `orders` WHERE `id`=$id_");
+    header("location: orders_list.php");
   }
 ?>
 
@@ -18,13 +18,13 @@
         <div class="col-sm-12"  style="color: black">
           <div class="content-wrapper">
             <div class="row">
-              <div class="col-sm-10"><h1>หมวดหมู่สินค้า</h1></div>
-              <div class="col-sm-2"><a href="category.php" class="btn btn-success form-control">เพิ่มหมวดหมู่</a></div>
+              <div class="col-sm-10"><h1>การสั่งซื้อ</h1><span>(เรียงลำดับจากล่าสุดไปยังเก่าที่สุด)</span></div>
+              <!-- <div class="col-sm-2"><a href="orders.php" class="btn btn-success form-control">เพิ่มการชำระเงิน</a></div> -->
             </div>
             <div class="row">
               <div class="col-sm-12">
                 <form class="input-group" action="" method="get">
-                  <input type="text" name="q" class="form-control" placeholder="ค้นหาจากชื่อ" aria-label="ค้นหาจากชื่อ"
+                  <input type="text" name="q" class="form-control" placeholder="ค้นหาจากชื่อ อีเมล เบอร์ ที่อยู่ หรือเวลาที่สั่งซื้อ" aria-label="ค้นหา"
                   value="<?php echo get('q'); ?>" />
                   <span class="input-group-btn">
                     <input type="submit" name="search" value="ค้นหา" class="btn btn-info" />
@@ -36,7 +36,11 @@
               <thead>
                 <tr>
                   <th>ลำดับ</th>
-                  <th>ชื่อหมวดหมู่</th>
+                  <th>ชื่อ</th>
+                  <th>ที่อยู่</th>
+                  <th>เบอร์โทรศัพท์</th>
+                  <th>อีเมล</th>
+                  <th>เวลาที่สั่งซื้อ (ปี-เดือน-วัน เวลา)</th>
                   <th></th>
                 </tr>
               </thead>
@@ -48,13 +52,13 @@
                   $size = intval( (get('size')!="" ? get('size'):10) );
                   $start = ($position-1) * $size;
                   if(get('q')!=""){
-                    $result = $conn->query("SELECT * FROM category WHERE name LIKE '%".get('q')."%' ORDER BY id LIMIT $start, $size");
-                    $result_nopaging = $conn->query("SELECT * FROM category WHERE name LIKE '%".get('q')."%' ORDER BY id");
+                    $result = $conn->query("SELECT * FROM orders WHERE (tel_user LIKE '%".get('q')."%') OR (email_user LIKE '%".get('q')."%') OR (name_user LIKE '%".get('q')."%') OR (address_user LIKE '%".get('q')."%') OR (order_time LIKE '%".get('q')."%') ORDER BY id DESC LIMIT $start, $size");
+                    $result_nopaging = $conn->query("SELECT * FROM orders WHERE (tel_user LIKE '%".get('q')."%') OR (email_user LIKE '%".get('q')."%') OR (name_user LIKE '%".get('q')."%') OR (address_user LIKE '%".get('q')."%') OR (order_time LIKE '%".get('q')."%') ORDER BY id DESC");
                   }else{
-                    $result = $conn->query("SELECT * FROM category ORDER BY id LIMIT $start, $size");
-                    $result_nopaging = $conn->query("SELECT * FROM category ORDER BY id");
+                    $result = $conn->query("SELECT * FROM orders ORDER BY id DESC LIMIT $start, $size");
+                    $result_nopaging = $conn->query("SELECT * FROM orders ORDER BY id DESC");
                   }
-
+                  // $count = mysqli_num_rows($result);
                   $index=1;
                   while($row = $result->fetch_assoc()){
                     // $category="";
@@ -66,13 +70,20 @@
                 ?>
                 <tr>
                   <td><?php echo $index; ?></td>
-                  <td><?php echo $row['name']; ?></td>
+                  <td><?php echo $row['name_user'];?></td>
+                  <td><?php echo $row['address_user'];?></td>
+                  <td><?php echo $row['tel_user'];?></td>
+                  <td><?php echo $row['email_user']; ?></td>
+                  <td><?php echo $row['order_time']; ?></td>
                   <td>
-                    <form action="category.php" method="post" style="display: inline;">
+                    <form action="orders.php" method="get" style="display: inline;">
                       <input type="hidden" name="id" value="<?php echo $row['id']; ?>"/>
-                      <input type="submit" name="edit_category" value="แก้ไข" class="btn btn-info" />
+                      <input type="submit" name="edit_orders" value="ดู" class="btn btn-dark" />
+                      <!-- <input type="submit" name="edit_orders" value="แก้ไข" class="btn btn-info" /> -->
                     </form>&nbsp;
-                    <input type="submit" onclick="ConfirmDelete('<?php echo $row['id']; ?>')" name="delete_category" value="ลบ" class="btn btn-danger" />
+                    <!-- <form action="" method="post" style="display: inline;"> -->
+                      <input type="submit" onclick="ConfirmDelete('<?php echo $row['id']; ?>')" name="delete_orders" value="ลบ" class="btn btn-danger" />
+                    <!-- </form> -->
                   </td>
                 </tr>
                 <?php
@@ -100,6 +111,9 @@
                     </select>
                   </div>
                 </div>
+              <!-- </div>
+
+              <div class="row"> -->
                 <div class="col-sm-6">
                   <div class="input-group">
                     <span class="input-group-addon">หน้า</span>
@@ -137,8 +151,8 @@
 <script type="text/javascript">
       function ConfirmDelete(id)
       {
-        if (confirm("ต้องการจะลบหมวดหมู่นี้?")){
-          location.href='category_list.php?delete_category=delete&id='+id;
+        if (confirm("ต้องการจะลบการสั่งซื้อนี้?")){
+          location.href='orders_list.php?delete_orders=delete&id='+id;
         }
       }
       function PagingForm(e){
