@@ -68,7 +68,7 @@
                   <td><?php echo $index; ?></td>
                   <td><?php echo $row['name']; ?></td>
                   <td>
-                    <form action="category.php" method="post" style="display: inline;">
+                    <form action="category.php" method="get" style="display: inline;">
                       <input type="hidden" name="id" value="<?php echo $row['id']; ?>"/>
                       <input type="submit" name="edit_category" value="แก้ไข" class="btn btn-info" />
                     </form>&nbsp;

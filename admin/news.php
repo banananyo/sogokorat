@@ -77,7 +77,7 @@
               <br/>
               <label>เนื้อหา</label>
               <textarea name="content" id="content" ><?php echo $row['content']; ?></textarea>
-              <input type="submit" name="save_news" value="save" class="form-control btn btn-success"/>
+              <input type="submit" name="save_news" value="บันทึก" class="form-control btn btn-success"/>
             </form>
           </div>
         </div>

@@ -36,7 +36,7 @@
               <br/>
               password <input name="password" id="password" value="" class="form-control" type="password"/>
               <br/>
-              <input type="submit" name="save_user" value="save" class="form-control btn btn-success"/>
+              <input type="submit" name="save_user" value="บันทึก" class="form-control btn btn-success"/>
             </form>
           </div>
         </div>

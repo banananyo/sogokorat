@@ -67,7 +67,7 @@
                   <td><?php echo $row['description'];?></td>
                   <td><img src="<?php echo $row['src_thumb'];?>" style="width: 80px;" /></td>
                   <td>
-                    <form action="news.php" method="post" style="display: inline;">
+                    <form action="news.php" method="get" style="display: inline;">
                       <input type="hidden" name="id" value="<?php echo $row['id']; ?>"/>
                       <input type="submit" name="edit_news" value="แก้ไข" class="btn btn-info" />
                     </form>&nbsp;

@@ -72,7 +72,7 @@
                   <td><?php echo $row['price'];?></td>
                   <td><?php echo $category['name']; ?></td>
                   <td>
-                    <form action="product.php" method="post" style="display: inline;">
+                    <form action="product.php" method="get" style="display: inline;">
                       <input type="hidden" name="old_q" value="<?php echo get('q'); ?>">
                       <input type="hidden" name="old_position" value="<?php echo $position; ?>">
                       <input type="hidden" name="old_size" value="<?php echo $size; ?>">

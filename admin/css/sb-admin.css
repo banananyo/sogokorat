@@ -356,3 +356,26 @@ footer.sticky-footer {
   transition: 0.3s;
   background-color: rgb(200,200,200);
 }
+.clickable {
+  cursor: pointer !important;
+}
+.rec_prod_title {
+  padding: 0 4px;
+  margin-top: 10px;
+  font-size:14px;
+  color:#23376c;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.rec-item {
+  width: calc(25% - 4px);
+  display: inline-block;
+}
+
+.rec_container {
+  /* display: flex;
+  justify-content: flex-start; */
+}
+
+ .frame{border:1px solid #d1d1d1;background: #fff;margin-bottom: 20px;    word-wrap: break-word;}

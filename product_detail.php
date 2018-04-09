@@ -30,9 +30,16 @@
 <script src="js/numeral.min.js"></script>
 <script type="text/javascript" src="js/main.js"></script>
 <style type="text/css">
-body {
-	margin-top: 0px;
-}
+  body {
+    margin-top: 0px;
+  }
+ .grid-sizer, .grid-item { width: calc(25% - 10px); }
+ @media screen and (max-width: 992px) {
+  .grid-sizer, .grid-item { width: calc(33% - 10px); }
+ }
+ @media screen and (max-width: 768px) {
+  .grid-sizer, .grid-item { width: calc(50% - 10px); }
+ }
 </style>
 </head>
 <body>
@@ -47,6 +54,9 @@ body {
 	while($row=$res->fetch_assoc()){
 		$product = $row;
 	}
+
+	$res_rec = $conn->query("SELECT * FROM recommend_products AS rec, product AS p WHERE `rec`.`p_id`='$pid' AND `rec`.`rec_p_id`=`p`.`id` ");
+	
 ?>
 <div class="container">
 	<div class="wrapper">
@@ -54,10 +64,11 @@ body {
 	<div class="row" style="padding:20px 0px; text-align: center;">
 	<?php 
 	if(isset($product)){ ?>
-		<img src="<?php echo str_replace('../images','images',$product['src_thumb']); ?>" style="max-width: calc(100vw - 30px); max-height: 360px; width: auto" />
-		<div style="color: rgb(150,150,180); font-size: 35px">ราคา: <?php echo $product['price']; ?> บาท</div>
+		
 		<div class="row">
 			<div class="col-md-7 col-lg-7">
+				<img src="<?php echo str_replace('../images','images',$product['src_thumb']); ?>" style="max-width: calc(100vw - 30px); max-height: 360px; width: auto" />
+				<div style="color: rgb(150,150,180); font-size: 35px">ราคา: <?php echo $product['price']; ?> บาท</div>
 				<h2>รายละเอียดสินค้า</h2>
 				<hr/>
 				<div style="width: 100%; overflow: auto; position: relative; text-align:center">
@@ -193,7 +204,41 @@ body {
 		
 	<?php }
 	?>
-    </div><!--row-->
+	</div><!--row-->
+	<?php if($res_rec->num_rows > 0) { ?>
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="ctiter"><span>สินค้าแนะนำ</span></div>
+		</div>
+		<div class="col-sm-12">
+			<div class="grid" >
+          		<div class="grid-sizer"></div>
+				<?php
+					while($row=$res_rec->fetch_assoc()){
+						?>
+						<div class="grid-item">
+							<div class="frame">
+							<figure>
+								<a href="product_detail.php?id=<?php echo $row['id'];?>" style="width: 100%">
+								<img src="<?php echo str_replace('../','',$row['src_thumb']); ?>" style="object-fit: contain; width: 100%;">
+								</a>
+							</figure>
+							<p style="padding: 0 0 10px 0;margin-top: 10px;border-bottom: 1px solid #d1d1d1;"><font style="font-size:22px; padding:15px; color:#23376c;"><?php echo $row['title']; ?></font></p>
+
+							<div style="padding: 0 15px;color:#666"><?php echo $row['detail_short']; ?></div>
+
+							<div align="right" style="padding-right:15px; padding-bottom:15px;">ราคา : <font color="#FF0000"><?php echo $row['price']; ?></font> ฿</div>
+
+							<div class="read-more"><a href="product_detail.php?id=<?php echo $row['id'];?>">รายละเอียดเพิ่มเติม <i class="fa fa-arrow-circle-o-right f-14"></i></a></div>
+							</div>
+						</div>
+						<?php
+					}
+				?>
+			</div>
+		</div>
+	</div>
+	<?php } ?>
 </div><!--wrapper-->  
 </div><!--container-->
 <div style="height:50px;"></div>
@@ -202,7 +247,20 @@ body {
 	<?php include "inc/inc_footer.php" ?><!--row-->
 
 </div><!--container-->
-
+<script type="text/javascript" src="js/masonry.min.js"></script>
+<script type="text/javascript" src="js/imagesloaded.min.js"></script>
+<script>
+var $grid = $('.grid').masonry({
+  itemSelector: '.grid-item',
+  columnWidth: 0,
+  horizontalOrder: true,
+  gutter: 10,
+  percentPosition: true,
+});
+$grid.imagesLoaded().progress( function() {
+  $grid.masonry('layout');
+});
+</script>
 </body>
 <script>
 	const validateAmount = function(e) {
