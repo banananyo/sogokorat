@@ -107,7 +107,6 @@ body {
         $order_info = array();
         $order_info_email=('<h2>รหัสสั่งซื้อ: '.$order_id.'</h2><br/>รายการที่สั่งซื้อ...<br/>'.
         '<table cellpadding="0" cellspacing="0"><thead><tr><th>สินค้า</th>'.
-        '<th>ปักสัญลักษณ์โรงเรียน</th><th>ขนาด</th><th>ปักดาวหรือจุด</th><th>ปักชื่อหรือเลขประจำตัว</th><th>ชื่อหรือเลขประจำตัว</th><th>สี</th><th>เอว</th><th>เอวxยาว</th>'.
         '<th>ราคาต่อชิ้น</th><th>จำนวน</th><th>ราคา</th><th>หมายเหตุ</th>'.
         '</tr></thead><tbody>');
 
@@ -139,16 +138,17 @@ body {
             array_push($order_info, $prod_order);
             
 
-            $order_info_email .= '<tr><td>'.$productp['title'].'</td>'.
-            '<td>'.($cart[$ix]->school_logo).'</td>'.
-            '<td>'.($cart[$ix]->size).'</td>'.
-            '<td>'.($cart[$ix]->star).'</td>'.
-            '<td>'.($cart[$ix]->student_id_or_name).'</td>'.
-            '<td>'.($cart[$ix]->student_info).'</td>'.
-            '<td>'.($cart[$ix]->color).'</td>'.
-            '<td>'.($cart[$ix]->waist).'</td>'.
-            '<td>'.($cart[$ix]->waist_long).'</td>'.
-            '<td>'.($productp['price'] + $addon).'</td><td>'.($cart[$ix]->amount).'</td><td>'.(($productp['price'] + $addon) * $cart[$ix]->amount).'</td>'.
+            $order_info_email .= '<tr><td>'.$productp['title'];
+            if(isset($cart[$ix]->school_logo) && strlen($cart[$ix]->school_logo) > 0) $order_info_email .= 'ปักสัญลักษณ์โรงเรียน: '.($cart[$ix]->school_logo).'<br/>';
+            if(isset($cart[$ix]->size) && strlen($cart[$ix]->size) > 0) $order_info_email .= 'ขนาด: '.($cart[$ix]->size).'<br/>';
+            if(isset($cart[$ix]->star) && strlen($cart[$ix]->star) > 0) $order_info_email .= 'ปักดาวหรือจุด: '.($cart[$ix]->star).'<br/>';
+            if(isset($cart[$ix]->student_id_or_name) && strlen($cart[$ix]->student_id_or_name) > 0) $order_info_email .= 'ปักชื่อหรือเลขประจำตัว: '.($cart[$ix]->student_id_or_name).'<br/>';
+            if(isset($cart[$ix]->student_info) && strlen($cart[$ix]->student_info) > 0) $order_info_email .= 'ชื่อหรือเลขประจำตัว: '.($cart[$ix]->student_info).'<br/>';
+            if(isset($cart[$ix]->color) && strlen($cart[$ix]->color) > 0) $order_info_email .= 'สี: '.($cart[$ix]->color).'<br/>';
+            if(isset($cart[$ix]->waist) && strlen($cart[$ix]->waist) > 0) $order_info_email .= 'เอว: '.($cart[$ix]->waist).'<br/>';
+            if(isset($cart[$ix]->waist_long) && strlen($cart[$ix]->waist_long) > 0) $order_info_email .= 'เอวxยาว: '.($cart[$ix]->waist_long);
+
+            $order_info_email .= '</td><td>'.($productp['price'] + $addon).'</td><td>'.($cart[$ix]->amount).'</td><td>'.(($productp['price'] + $addon) * $cart[$ix]->amount).'</td>'.
             '<td>'.($cart[$ix]->remark).'</td>'.
             '</tr>';
             $ix++;
