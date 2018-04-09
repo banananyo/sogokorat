@@ -64,7 +64,7 @@
               <input type="file" name="src" id="src" src="<?php echo $row['src']; ?>" class="form-control"/>
               <br/>
               <img src="<?php echo $row['src']; ?>" class="img-fluid" />
-              <input type="submit" name="save_slider" value="save" class="form-control btn btn-success"/>
+              <input type="submit" name="save_slider" value="บันทึก" class="form-control btn btn-success"/>
             </form>
           </div>
         </div>

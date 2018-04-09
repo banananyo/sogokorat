@@ -18,7 +18,7 @@
         <div class="col-sm-12"  style="color: black">
           <div class="content-wrapper">
             <div class="row">
-              <div class="col-sm-10"><h1>การชำระเงิน</h1></div>
+              <div class="col-sm-10"><h1>การชำระเงิน</h1><span>(เรียงลำดับจากล่าสุดไปยังเก่าที่สุด)</span></div>
               <!-- <div class="col-sm-2"><a href="payment.php" class="btn btn-success form-control">เพิ่มการชำระเงิน</a></div> -->
             </div>
             <div class="row">
@@ -52,9 +52,11 @@
                   $size = intval( (get('size')!="" ? get('size'):10) );
                   $start = ($position-1) * $size;
                   if(get('q')!=""){
-                    $result = $conn->query("SELECT * FROM payment WHERE (email LIKE '%".get('q')."%') OR (bank_id LIKE '%".get('q')."%') OR (telephone LIKE '%".get('q')."%') OR (customer_name LIKE '%".get('q')."%') ORDER BY id LIMIT $start, $size");
+                    $result = $conn->query("SELECT * FROM payment WHERE (email LIKE '%".get('q')."%') OR (bank_id LIKE '%".get('q')."%') OR (telephone LIKE '%".get('q')."%') OR (customer_name LIKE '%".get('q')."%') ORDER BY id DESC LIMIT $start, $size");
+                    $result_nopaging = $conn->query("SELECT * FROM payment WHERE (email LIKE '%".get('q')."%') OR (bank_id LIKE '%".get('q')."%') OR (telephone LIKE '%".get('q')."%') OR (customer_name LIKE '%".get('q')."%') ORDER BY id DESC");
                   }else{
-                    $result = $conn->query("SELECT * FROM payment ORDER BY id LIMIT $start, $size");
+                    $result = $conn->query("SELECT * FROM payment ORDER BY id DESC LIMIT $start, $size");
+                    $result_nopaging = $conn->query("SELECT * FROM payment ORDER BY id DESC");
                   }
                   // $count = mysqli_num_rows($result);
                   $index=1;
@@ -119,7 +121,7 @@
                     <select class="form-control" name="position" onchange="PagingForm()">
                       <?php
                         $x=0;
-                        $pages = mysqli_num_rows($conn->query("SELECT * FROM payment")) / $size;
+                        $pages = ceil(mysqli_num_rows($result_nopaging) / $size);
                         while($x < $pages){
                           echo '<option value="'.($x+1).'" '.($position==($x+1) ? 'selected':'').'>'.($x+1).'</option>';
                           $x++;
@@ -128,6 +130,15 @@
                     </select>
                   </div>
                 </div>
+                <div class="col-sm-12 text-center" style="font-size: 16px; margin: 10px 0;">
+                    <span>แสดงหน้าที่</span>
+                    <span><?php echo $position; ?></span>
+                    <span>จากทั้งหมด</span>
+                    <span><?php echo $pages; ?></span>
+                    <span>หน้า</span>
+                  </div>
+                </div>
+
               </div>
             </form>
           </div>

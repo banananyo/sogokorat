@@ -47,7 +47,7 @@
               <label>ชื่อหมวดหมู่สินค้า</label>
               <input type="text" name="name" id="name" class="form-control" value="<?php echo $row['name']; ?>" />
               <br/>
-              <input type="submit" name="save_category" value="save" class="form-control btn btn-success"/>
+              <input type="submit" name="save_category" value="บันทึก" class="form-control btn btn-success"/>
             </form>
           </div>
         </div>

@@ -4,7 +4,13 @@
 
 <?php include('head.php'); include('../connect.php');?>
 <?php
-
+  function updateRecProd($connection, $pid, $rec_prods_selected) {
+    $connection->query("DELETE FROM recommend_products r WHERE r.p_id=$pid");
+    foreach($rec_prods_selected as $rec) {
+      if($rec != " " && $rec != "")
+        $connection->query("INSERT INTO `recommend_products`(`id`, `p_id`, `rec_p_id`) VALUES (NULL,$pid,$rec)");
+    }
+  }
   function alertAndGoBack($message) {
     echo '<script type="text/javascript">
         alert("'.$message.'");
@@ -28,6 +34,8 @@
     $waist_long_ = getOrNull('waist_long');
     $color_ = getOrNull('color');
 
+    $rec_prods_selected = explode(",", get('rec_prod_selected'));
+    
     $errors     = '';
     $isError = false;
     $maxsize    = 204800; //200 MB
@@ -97,6 +105,7 @@
         // alert("อัพเดทสินค้าแล้ว");
         // window.location.href = "product_list.php";
         // </script>';
+        updateRecProd($conn, $id_, $rec_prods_selected);
         alertAndGoBack('อัพเดทสินค้าแล้ว');
       }
       // if no id -> create product
@@ -109,6 +118,7 @@
         // alert("เพิ่มสินค้าแล้ว");
         // window.location.href = "product_list.php";
         // </script>';
+        updateRecProd($conn, $id_, $rec_prods_selected);
         alertAndGoBack('เพิ่มสินค้าแล้ว');
       }
     }
@@ -123,6 +133,7 @@
         // alert("อัพเดทสินค้าแล้ว");
         // window.location.href = "product_list.php";
         // </script>';
+        updateRecProd($conn, $id_, $rec_prods_selected);
         alertAndGoBack('อัพเดทสินค้าแล้ว');
       }
       // if no id -> create product
@@ -135,6 +146,7 @@
         // alert("เพิ่มสินค้าแล้ว");
         // window.location.href = "product_list.php";
         // </script>';
+        updateRecProd($conn, $id_, $rec_prods_selected);
         alertAndGoBack('เพิ่มสินค้าแล้ว');
       }
     }
@@ -244,7 +256,88 @@
                   <textarea rows="5" name="waist_long" id="waist_long" class="form-control" onblur="checkField(this)" onfocus="checkField(this)"><?php if(isset($row['waist_long'])) echo $row['waist_long']; ?></textarea>
                   <p id="message_waist_long" style="color: red; display: none;">โปรดตวจสอบให้แน่ใจว่าท่านใส่เครื่องหมาย + เว้นวรรค และ ฿ อย่างถูกต้อง</p>
                   </br>
-                  <input type="submit" name="save_product" value="save" class="form-control btn btn-success"/>
+                  <br/>
+                  <h3>จัดการสินค้าที่แนะนำ</h3>
+                  <br/>
+                  <span style="color: #333" >(คลิกเลือกสินค้าเพื่อเพิ่ม หรือเอาออกจากสินค้าแนะนำได้)</span>
+                  <br/>
+                  <br/>
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <h4>สินค้าที่มี</h4>
+                    </div>
+                    <div class="col-sm-6" style="border-left: 2px solid #333;">
+                      <h4>สินค้าแนะนำ</h4>
+                    </div>
+                  </div>
+                  <!--  -->
+                  <?php
+                  $stock_prods = $conn->query("SELECT p.* FROM product p
+                  LEFT OUTER JOIN recommend_products r ON r.p_id=$id AND r.rec_p_id = p.id
+                  WHERE r.p_id IS NULL AND r.rec_p_id IS NULL");
+                  $selected_prods = $conn->query("SELECT `p`.`id` AS pid, `p`.`title` AS ptitle, `p`.`src_thumb` AS psrc FROM recommend_products AS rec, product AS p WHERE `rec`.`rec_p_id`=`p`.`id` AND `rec`.`p_id`=$id");
+                  if($stock_prods->num_rows == 0){ ?>
+                    <div><h2 style="text-align: center; color: red;">ไม่พบสินค้า</h2></div>
+                    <?php
+                  } else {
+                  ?>
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <div class="rec_container" id="root_rec_prods" >
+                        <?php
+                          while($stock_prod=$stock_prods->fetch_assoc()){
+                            ?>
+                            <div class="rec-item" id="rec_prod_<?php echo $stock_prod['id']; ?>" onclick="toggle_rec_prod(this)">
+                              <div class="frame">
+                                <figure>
+                                  <a style="width: 100%">
+                                    <img src="<?php echo $stock_prod['src_thumb']; ?>" style="object-fit: cover; width: 100%; height: 180px">
+                                  </a>
+                                </figure>
+                                <p class="rec_prod_title">
+                                  <?php echo $stock_prod['title']; ?>
+                                  <input type="hidden" class="rec_prods" value="<?php echo $stock_prod['id']; ?>">
+                                </p>
+                              </div>
+                            </div>
+                            <?php
+                          } //while end
+                        ?>
+                      </div>
+                    </div>
+                    <div class="col-sm-6"  style="border-left: 2px solid #333;">
+                      <div class="rec_container" id="root_rec_prods_using">
+                        <?php
+                          while($selected_prod=$selected_prods->fetch_assoc()){
+                            ?>
+                            <div class="rec-item" id="rec_prod_<?php echo $selected_prod['pid']; ?>" onclick="toggle_rec_prod(this)">
+                              <div class="frame">
+                                <figure>
+                                  <a style="width: 100%">
+                                    <img src="<?php echo $selected_prod['psrc']; ?>" style="object-fit: cover; width: 100%; height: 180px">
+                                  </a>
+                                </figure>
+                                <p class="rec_prod_title">
+                                  <?php echo $selected_prod['ptitle']; ?>
+                                  <input type="hidden" class="rec_prods" value="<?php echo $selected_prod['pid']; ?>">
+                                </p>
+                              </div>
+                            </div>
+                            <?php
+                          } //while end
+                        ?>
+                      </div>
+                    </div>
+                  </div>
+                <?php } ?>
+                <!--  -->
+                <br/>
+                  <div class="row">
+                    <div class="col-sm-12 text-center">
+                      <input type="hidden" name="rec_prod_selected" id="rec_prod_selected" />
+                      <input type="submit" name="save_product" value="บันทึก" class="btn btn-lg btn-success"/>
+                    </div>
+                  </div>
                 </form>
               </div>
             </div>
@@ -293,6 +386,7 @@
         $('#message_'+id).show();
       }
     }
+    
     // const validateForm = function() {
     //   const formFields = $('#productForm').serializeArray();
     //   let obj = {};
@@ -309,5 +403,27 @@
 
     //   return false;
     // }
+
+    const toggle_rec_prod = function(el) {
+      // console.log(el.id);
+      var parent_id = $(el).parent().attr('id');
+      var element = $(el).detach();
+      // console.log('parent'+parent_id);
+      if (parent_id !== 'root_rec_prods_using') {
+        $('#root_rec_prods_using').append(element);
+        // add
+      } else {
+        $('#root_rec_prods').append(element);
+        // remove
+      }
+
+      const using = $('#root_rec_prods_using').find('.rec_prods').toArray();
+      $('#rec_prod_selected').val('');
+      using.forEach(function(item) {
+        console.log($(item).val());
+        $('#rec_prod_selected').val($('#rec_prod_selected').val() +$(item).val()+ ',');
+      });
+      
+    }
 </script>
 </html>

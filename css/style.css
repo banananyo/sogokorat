@@ -328,3 +328,8 @@ div.middlenews-div {
 .textnews1{font-size:30px;}
 .textnews2{font-size:32px; font-weight:bold;}
 .textnewsdetail{color:#666666; font-size:24;}
+
+.product-property {
+    margin: 0;
+}
+

@@ -62,7 +62,7 @@
                   <?php } ?>
                 </tbody>
               </table>
-              <input type="submit" name="save_products" class="btn btn-success form-control" value="save" />
+              <input type="submit" name="save_products" class="btn btn-success form-control" value="บันทึก" />
             </form>
             <hr/>
             <!--  -->

@@ -30,7 +30,7 @@
             <form method="post" action="">
               <input type="hidden" name="id" value="<?php echo $id; ?>"/>
               <textarea name="content" id="content" ><?php echo $res; ?></textarea>
-              <input type="submit" name="save_contact" value="save" class="form-control btn btn-success"/>
+              <input type="submit" name="save_contact" value="บันทึก" class="form-control btn btn-success"/>
             </form>
           </div>
         </div>

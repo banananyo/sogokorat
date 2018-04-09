@@ -64,18 +64,14 @@
       <div class="col-xs-12 col-sm-3 col-md-3" style="padding:0px 15px;">
       <div class="frame">
       <figure><a href="product_detail.php?id=<?php echo $row_p['id']?>"><img src="<?php echo str_replace('../','',$row_p['src_thumb']); ?>" class="img-responsive"></a></figure>
-      <table width="100%" border="0" cellspacing="0" cellpadding="0">
-      <tr>
-      <td style="height:auto;"><font style="font-size:22px; padding:15px; color:#23376c;"><?php echo $row_p['title']; ?></font></td>
-      </tr>
-      </table>
+      <p style="font-size:20px; padding: 10px 5px; color:#23376c; text-align: center;"><?php echo $row_p['title']; ?></p>
 
       <div>
-      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <!-- <table width="100%" border="0" cellspacing="0" cellpadding="0">
       <tr>
       <td valign="middle" align="left" style="height:auto; padding:0px 15px; font-size:18px;"><p style="color:#666"><?php echo $row_p['detail_short']; ?></p></td>
       </tr>
-      </table>
+      </table> -->
 
       </div>
       <div align="right" style="padding-right:15px; padding-bottom:15px;">ราคา : <font color="#FF0000"><?php echo $row_p['price']; ?></font> ฿</div>
