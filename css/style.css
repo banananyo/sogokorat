@@ -333,3 +333,22 @@ div.middlenews-div {
     margin: 0;
 }
 
+.btn-paging {
+    border: none;
+    outline: none;
+    background: none;
+    cursor: pointer;
+    transition: 0.5s;
+    padding: 0 15px;
+}
+.btn-paging:hover {
+    background: rgba(200,200,200,0.8) !important;
+}
+.btn-paging.active, .btn-paging.active:hover {
+    background: rgba(200,200,200,0.8) !important;
+}
+
+.btn-paging:disabled:hover {
+    background: none !important;
+    cursor: not-allowed;
+}
