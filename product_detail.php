@@ -212,24 +212,28 @@
 		</div>
 		<div class="col-sm-12">
 			<div class="grid" >
-          		<div class="grid-sizer"></div>
+				<div class="grid-sizer"></div>
 				<?php
 					while($row=$res_rec->fetch_assoc()){
 						?>
 						<div class="grid-item">
-							<div class="frame">
+							<div class="frame-border prod">
 							<figure>
 								<a href="product_detail.php?id=<?php echo $row['id'];?>" style="width: 100%">
-								<img src="<?php echo str_replace('../','',$row['src_thumb']); ?>" style="object-fit: contain; width: 100%;">
+								<img src="<?php echo str_replace('../','',$row['src_thumb']); ?>" style="object-fit: cover; width: 100%; height: 273px">
 								</a>
 							</figure>
-							<p style="padding: 0 0 10px 0;margin-top: 10px;border-bottom: 1px solid #d1d1d1;"><font style="font-size:22px; padding:15px; color:#23376c;"><?php echo $row['title']; ?></font></p>
+							<p class="prod-title"><?php echo $row['title']; ?></p>
 
-							<div style="padding: 0 15px;color:#666"><?php echo $row['detail_short']; ?></div>
+							<div class="prod-details"><?php echo $row['detail_short']; ?></div>
 
-							<div align="right" style="padding-right:15px; padding-bottom:15px;">ราคา : <font color="#FF0000"><?php echo $row['price']; ?></font> ฿</div>
+							<div align="right" style="padding-right:15px;">ราคา : <span color="#FF0000"><?php echo $row['price']; ?></span> ฿</div>
 
-							<div class="read-more"><a href="product_detail.php?id=<?php echo $row['id'];?>">รายละเอียดเพิ่มเติม <i class="fa fa-arrow-circle-o-right f-14"></i></a></div>
+							<div class="read-more">
+								<a href="product_detail.php?id=<?php echo $row['id'];?>">
+								<span style="color: #23376c">รายละเอียดเพิ่มเติม <i class="fa fa-arrow-circle-o-right f-14"></i></span>
+								</a>
+							</div>
 							</div>
 						</div>
 						<?php

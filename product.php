@@ -28,24 +28,6 @@
   <script src="js/bootstrap.min.js"></script>
   <script src="js/owl.carousel.min.js"></script>
   <script type="text/javascript" src="js/main.js"></script>
-
-  <style type="text/css">
-  body {
-    margin-top: 0px;
-  }
-  @media screen and (min-width: 993px) {
-  .grid-sizer, .grid-item { width: calc(25% - 10px); }
-  }
- @media screen and (max-width: 992px) and (min-width: 769px) {
-  .grid-sizer, .grid-item { width: calc(33% - 10px); }
- }
- @media screen and (max-width: 768px) and (min-width: 376px) {
-  .grid-sizer, .grid-item { width: calc(50% - 10px); }
- }
- @media screen and (max-width: 375px) {
-  .grid-sizer, .grid-item { width: calc(100% - 10px); }
- }
-</style>
 </head>
 <body>
 
@@ -80,7 +62,7 @@
                 <!-- Gal 1-->
                 <a href="product.php">
                 <div class="col-xs-12 col-sm-3 col-md-3" style="padding:0px 15px;">
-                  <div class="frame">
+                  <div class="frame-border">
                     <table width="100%" border="0" cellspacing="0" cellpadding="0">
                       <tr>
                         <td style="height:auto;"><font style="font-size:22px; padding:15px; color:#23376c;">กลับไปดูสินค้าทั้งหมด</font></h2></td>
@@ -102,17 +84,16 @@
             $res = $conn->query("SELECT * FROM product ORDER BY id LIMIT $start, $size");
             $res_nopaging = $conn->query("SELECT * FROM product ORDER BY id");
             ?>
-            <div class="grid" >
-              <div class="grid-sizer"></div>
+            <div class="grid-wrapper">
             <?php
             
             while($row_cat=$res_cat->fetch_assoc()){
               ?>
 
               <div class="grid-item">
-                <div class="frame">
+                <div class="frame-border cat">
                   <a href="product.php?cat=<?php echo $row_cat['id'];?>">
-                    <p style="font-size:22px; padding:15px; color:#23376c; text-align: center; margin: 0"><?php echo $row_cat['name']; ?></p>
+                    <p><?php echo $row_cat['name']; ?></p>
                   </a>
                 </div>
               </div>
@@ -133,25 +114,29 @@
         ?>
         
          <div class="grid" >
-          <div class="grid-sizer"></div>
+         <div class="grid-sizer"></div>
             <?php
             
             while($row=$res->fetch_assoc()){
               ?>
               <div class="grid-item">
-                <div class="frame">
+                <div class="frame-border prod">
                   <figure>
                     <a href="product_detail.php?id=<?php echo $row['id'];?>" style="width: 100%">
-                      <img src="<?php echo str_replace('../','',$row['src_thumb']); ?>" style="object-fit: contain; width: 100%;">
+                      <img src="<?php echo str_replace('../','',$row['src_thumb']); ?>" style="object-fit: cover; width: 100%; height: 273px">
                     </a>
                   </figure>
-                  <p style="padding: 0 10px 10px 10px;margin-top: 10px;border-bottom: 1px solid #d1d1d1;font-size:22px; color:#23376c;"><?php echo $row['title']; ?></p>
+                  <p class="prod-title"><?php echo $row['title']; ?></p>
 
-                  <div style="padding: 0 15px;color:#666"><?php echo $row['detail_short']; ?></div>
+                  <div class="prod-details"><?php echo $row['detail_short']; ?></div>
 
-                  <div align="right" style="padding-right:15px; padding-bottom:15px;">ราคา : <font color="#FF0000"><?php echo $row['price']; ?></font> ฿</div>
+                  <div align="right" style="padding-right:15px;">ราคา : <span color="#FF0000"><?php echo $row['price']; ?></span> ฿</div>
 
-                  <div class="read-more"><a href="product_detail.php?id=<?php echo $row['id'];?>">รายละเอียดเพิ่มเติม <i class="fa fa-arrow-circle-o-right f-14"></i></a></div>
+                  <div class="read-more">
+                    <a href="product_detail.php?id=<?php echo $row['id'];?>">
+                    <span style="color: #23376c">รายละเอียดเพิ่มเติม <i class="fa fa-arrow-circle-o-right f-14"></i></span>
+                    </a>
+                  </div>
                 </div>
               </div>
               <?php
@@ -216,19 +201,5 @@ if($pages >= 1) { ?>
 
 
 <?php include "inc/inc_footer.php" ?><!--row-->
-<script type="text/javascript" src="js/masonry.min.js"></script>
-<script type="text/javascript" src="js/imagesloaded.min.js"></script>
-<script>
-var $grid = $('.grid').masonry({
-  itemSelector: '.grid-item',
-  columnWidth: 0,
-  horizontalOrder: true,
-  gutter: 10,
-  percentPosition: true,
-});
-$grid.imagesLoaded().progress( function() {
-  $grid.masonry('layout');
-});
-</script>
 </body>
 </html>

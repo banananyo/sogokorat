@@ -212,11 +212,11 @@ body {
                     $amount_i = $cart[$i]->amount;
                     $sum = $sum + (($product['price'] + $addon) *$amount_i);
                     echo '<tr>';
-                    echo '<td style="text-align: left;">'.$product['title'].'<br />';
+                    echo '<td style="text-align: left;">';
 
 
-                    echo '<div style="font-size: 18px; color: #555; font-weight: 400; background-color: #EEE; padding: 4px; border-radius: 5px;">';
-
+                    echo '<div style="font-size: 18px; color: #555; font-weight: 400; padding: 4px;">';
+                    echo '<h3>'.$product['title'].'</h3>';
                     if(strlen($cart[$i]->school_logo) > 0) echo '<p class="product-property">ปักสัญลักษณ์โรงเรียน: '.($cart[$i]->school_logo).'</p>';
                     if(strlen($cart[$i]->size) > 0) echo '<p class="product-property">ขนาด: '.($cart[$i]->size).'</p>';
                     if(strlen($cart[$i]->star) > 0) echo '<p class="product-property">ปักดาวหรือจุด: '.($cart[$i]->star).'</p>';
