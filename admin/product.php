@@ -118,7 +118,7 @@
         // alert("เพิ่มสินค้าแล้ว");
         // window.location.href = "product_list.php";
         // </script>';
-        updateRecProd($conn, $id_, $rec_prods_selected);
+        updateRecProd($conn, $conn->insert_id, $rec_prods_selected);
         alertAndGoBack('เพิ่มสินค้าแล้ว');
       }
     }
@@ -146,7 +146,7 @@
         // alert("เพิ่มสินค้าแล้ว");
         // window.location.href = "product_list.php";
         // </script>';
-        updateRecProd($conn, $id_, $rec_prods_selected);
+        updateRecProd($conn, $conn->insert_id, $rec_prods_selected);
         alertAndGoBack('เพิ่มสินค้าแล้ว');
       }
     }
@@ -272,10 +272,14 @@
                   </div>
                   <!--  -->
                   <?php
-                  $stock_prods = $conn->query("SELECT p.* FROM product p
-                  LEFT OUTER JOIN recommend_products r ON r.p_id=$id AND r.rec_p_id = p.id
-                  WHERE r.p_id IS NULL AND r.rec_p_id IS NULL");
-                  $selected_prods = $conn->query("SELECT `p`.`id` AS pid, `p`.`title` AS ptitle, `p`.`src_thumb` AS psrc FROM recommend_products AS rec, product AS p WHERE `rec`.`rec_p_id`=`p`.`id` AND `rec`.`p_id`=$id");
+                  $stock_prods = $conn->query("SELECT p.* FROM product p");
+                  if($id != '') {
+                    $stock_prods = $conn->query("SELECT p.* FROM product p
+                    LEFT OUTER JOIN recommend_products r ON r.p_id=$id AND r.rec_p_id = p.id
+                    WHERE r.p_id IS NULL AND r.rec_p_id IS NULL");
+                    $selected_prods = $conn->query("SELECT `p`.`id` AS pid, `p`.`title` AS ptitle, `p`.`src_thumb` AS psrc FROM recommend_products AS rec, product AS p WHERE `rec`.`rec_p_id`=`p`.`id` AND `rec`.`p_id`=$id");
+                  }
+                  
                   if($stock_prods->num_rows == 0){ ?>
                     <div><h2 style="text-align: center; color: red;">ไม่พบสินค้า</h2></div>
                     <?php
@@ -308,7 +312,7 @@
                     <div class="col-sm-6"  style="border-left: 2px solid #333;">
                       <div class="rec_container" id="root_rec_prods_using">
                         <?php
-                          while($selected_prod=$selected_prods->fetch_assoc()){
+                          while(isset($selected_prods) && $selected_prod=$selected_prods->fetch_assoc()){
                             ?>
                             <div class="rec-item" id="rec_prod_<?php echo $selected_prod['pid']; ?>" onclick="toggle_rec_prod(this)">
                               <div class="frame">
