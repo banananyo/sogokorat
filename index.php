@@ -54,31 +54,33 @@
     </div><!--row1-->
 
     <div class="row" style="padding:20px 0px;">
+      <div class="grid" >
+      <div class="grid-sizer"></div>
       <?php
       include('connect.php');
       $q_p = $conn->query("SELECT pd.* FROM home_product AS hp, product AS pd WHERE pd.id=hp.record_id");
       while($row_p = $q_p->fetch_assoc()){
 
       ?>
-      <div class="box_project_main">
-      <div class="col-xs-12 col-sm-3 col-md-3" style="padding:0px 15px;">
-      <div class="frame">
-      <figure><a href="product_detail.php?id=<?php echo $row_p['id']?>"><img src="<?php echo str_replace('../','',$row_p['src_thumb']); ?>" class="img-responsive"></a></figure>
-      <p style="font-size:20px; padding: 10px 5px; color:#23376c; text-align: center;"><?php echo $row_p['title']; ?></p>
+      <div class="grid-item">
+        <div class="frame-border prod">
+          <figure>
+            <a href="product_detail.php?id=<?php echo $row_p['id'];?>" style="width: 100%">
+              <img src="<?php echo str_replace('../','',$row_p['src_thumb']); ?>" style="object-fit: cover; width: 100%; height: 273px">
+            </a>
+          </figure>
+          <p class="prod-title"><?php echo $row_p['title']; ?></p>
 
-      <div>
-      <!-- <table width="100%" border="0" cellspacing="0" cellpadding="0">
-      <tr>
-      <td valign="middle" align="left" style="height:auto; padding:0px 15px; font-size:18px;"><p style="color:#666"><?php echo $row_p['detail_short']; ?></p></td>
-      </tr>
-      </table> -->
+          <div class="prod-details"><?php echo $row_p['detail_short']; ?></div>
 
-      </div>
-      <div align="right" style="padding-right:15px; padding-bottom:15px;">ราคา : <font color="#FF0000"><?php echo $row_p['price']; ?></font> ฿</div>
+          <div align="right" style="padding-right:15px;">ราคา : <span color="#FF0000"><?php echo $row_p['price']; ?></span> ฿</div>
 
-      <div class="read-more"><a href="product_detail.php?id=<?php echo $row_p['id']?>">รายละเอียดเพิ่มเติม <i class="fa fa-arrow-circle-o-right f-14"></i></a></div>
-      </div>
-      </div>
+          <div class="read-more">
+            <a href="product_detail.php?id=<?php echo $row_p['id'];?>">
+            <span style="color: #23376c">รายละเอียดเพิ่มเติม <i class="fa fa-arrow-circle-o-right f-14"></i></span>
+            </a>
+          </div>
+        </div>
       </div>
       <?php } ?>
     </div>
@@ -103,7 +105,7 @@
        <figure2><a href="news_detail.php?id=<?php echo $newsArray[0]['id']; ?>"><img src="<?php echo str_replace('../','',$newsArray[0]['src_thumb']); ?>" class="img-responsive"></a></figure>
          <div style="font-size:24px; color:#0e5c9d; font-weight:400;"><b><?php echo $newsArray[0]['title']?></b></div>
          <p style="color:#000; padding-top:0px;"><?php echo $newsArray[0]['description']?><br><br></p>
-         <div align="right"><a href="news_detail.php?viewID=#view"><img src="images/readmore.jpg" width="90" height="28"></a></div>
+         <div align="right"><a href="news_detail.php?id=<?php echo $newsArray[0]['id']; ?>"><img src="images/readmore.jpg" width="90" height="28"></a></div>
        </div><!--frame-->
      </div><!-- col 4 -->
    </div><!--box_project_main2-->
